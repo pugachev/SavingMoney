@@ -11,6 +11,10 @@
     <action name="SavingMoneyListForm" type="action.SavingMoneyListAction" path="/SavingMoneyList">
       <forward name="success" path="/view/calendar.jsp"/>
     </action>
+
+    <action name="SavingMoneyListForm" type="action.SavingMoneyRegistAction" path="/SavingMoneyRegist">
+      <forward name="success" path="/view/calendar.jsp"/>
+    </action>
   </action-mappings>
 
   <message-resources parameter="ApplicationResource" />

@@ -18,14 +18,12 @@
 		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/calendar.css" />
 		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/custom_1.css" />
 		<script src="${pageContext.request.contextPath}/js/modernizr.custom.63321.js"></script>
-
-
 	</head>
 	<body>
 		<div class="container">
 			<div id="icesword" class="custom-calendar-wrap custom-calendar-full">
 				<div class="custom-header clearfix">
-					<h2>節約カレンダー</h2>
+					<h2>池フク式 節約カレンダー</h2>
 					<h3 class="custom-month-year">
 						<span id="custom-month" class="custom-month"></span>
 						<span id="custom-year" class="custom-year"></span>
@@ -49,8 +47,20 @@
 								<span aria-hidden="true">&times;</span>
 							</button>
 						</div>
-						<div class="modal-body">これは モーダルダイアログの本文です。</div>
-						<p></p>日
+						<div class="modal-body">
+							<div class="form-group">
+							  <label for="select1a">品目:</label>
+							  <select id="select1a" class="form-control">
+							    <option value="1">食費</option>
+							    <option value="2">日用品</option>
+							  </select>
+							</div>
+							<div class="form-group">
+							  <label for="text1">金額:</label>
+							  <input type="text" id="text1" class="form-control">
+							</div>
+						</div>
+						<div id="targetdate"></div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
 							<button type="button" class="btn btn-primary">保存する</button>
@@ -85,6 +95,8 @@
 							            return false;
 							        }); */
 									$('#exampleModal').modal();
+							        var choicedate = dateProperties[ 'year' ]+' 年 ' + dateProperties[ 'month' ] + ' 月 ' + dateProperties[ 'day' ] + ' 日';
+							        $('#targetdate').text(choicedate);
 								}
 							// }
 						},

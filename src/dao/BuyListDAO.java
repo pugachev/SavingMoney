@@ -1,10 +1,12 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -19,10 +21,46 @@ public class BuyListDAO {
     //購入品を追加するSQL
 	private static final String INSERTBUYLIST = "insert into buylist(itemnum,buyamount,buydate) values(?,?,?);";
 
+	//選択日に使った合計金額を取得するSQL
+	private static final String SELECTAMOUNTBYDAY = "select buydate,sum(buyamount) as buyamount from buylist group by ?";
+
     private DataSource source;
 
     public BuyListDAO() {
         source = DaoUtil.getSource();
+    }
+
+    public int getAmount(String date) throws SQLException
+    {
+        Connection con = null;
+        PreparedStatement pStmt = null;
+        ResultSet rs = null;
+
+        int ret=0;
+
+        try {
+
+            con = source.getConnection();
+
+            pStmt = con.prepareStatement(SELECTAMOUNTBYDAY);
+            pStmt.setString(1,date);
+            rs = pStmt.executeQuery();
+
+            while (rs.next()) {
+                ret=rs.getInt("buyamount");
+            }
+
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            if(rs != null){
+                rs.close();
+            }
+            pStmt.close();
+            con.close();
+        }
+
+        return ret;
     }
 
     public List<Product> getProductList() throws SQLException {
@@ -59,12 +97,13 @@ public class BuyListDAO {
         //新しく入力された商品にテーブルを追加する
         Connection con = source.getConnection();
         PreparedStatement pStmt = null;
-
+        Date now = nowDate();
         try{
             pStmt = con.prepareStatement(INSERTBUYLIST);
 
             pStmt.setInt(1,pro.getItemnum());
             pStmt.setInt(2,pro.getBuyamount());
+            pStmt.setDate(3,now);
             pStmt.executeUpdate();
 
         }catch(SQLException ex){
@@ -84,5 +123,8 @@ public class BuyListDAO {
 
         return pro;
     }
-
+    private Date nowDate() {
+        Calendar cal = Calendar.getInstance();
+        return new Date(cal.getTimeInMillis());
+    }
 }

@@ -4,6 +4,7 @@
 
   <form-beans>
     <form-bean name="SavingMoneyListForm" type="org.apache.struts.action.DynaActionForm" />
+    <form-bean name="SavingMoneyRegistForm" type="org.apache.struts.action.DynaActionForm" />
   </form-beans>
 
   <!-- 2)Struts1.2のWildcard機能を利用したActionクラスの設定 -->
@@ -12,7 +13,7 @@
       <forward name="success" path="/view/calendar.jsp"/>
     </action>
 
-    <action name="SavingMoneyListForm" type="action.SavingMoneyRegistAction" path="/SavingMoneyRegist">
+    <action name="SavingMoneyRegistForm" type="action.SavingMoneyRegistAction" path="/SavingMoneyRegist">
       <forward name="success" path="/view/calendar.jsp"/>
     </action>
   </action-mappings>

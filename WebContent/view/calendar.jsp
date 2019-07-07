@@ -47,24 +47,26 @@
 								<span aria-hidden="true">&times;</span>
 							</button>
 						</div>
-						<div class="modal-body">
-							<div class="form-group">
-							  <label for="select1a">品目:</label>
-							  <select id="select1a" class="form-control">
-							    <option value="1">食費</option>
-							    <option value="2">日用品</option>
-							  </select>
+						<form action="${pageContext.request.contextPath}/SavingMoneyRegist.do" method="post">
+							<div class="modal-body">
+								<div class="form-group">
+								  <label for="select1a">品目:</label>
+								  <select id="selecteditem" name="selecteditem" class="form-control">
+								    <option value="1">食費</option>
+								    <option value="2">日用品</option>
+								  </select>
+								</div>
+								<div class="form-group">
+								  <label for="text1">金額:</label>
+								  <input type="text" id="text1" name="buyamount" class="form-control">
+								</div>
 							</div>
-							<div class="form-group">
-							  <label for="text1">金額:</label>
-							  <input type="text" id="text1" class="form-control">
+							<div id="targetdate"></div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+								<button type="submit" class="btn btn-primary" >保存する</button>
 							</div>
-						</div>
-						<div id="targetdate"></div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
-							<button type="button" class="btn btn-primary">保存する</button>
-						</div>
+						</form>
 					</div>
 				</div>
 			</div>

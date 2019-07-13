@@ -14,7 +14,7 @@ import model.Product;
 
 
 public class SavingMoneyRegistAction extends DispatchAction {
-    public ActionForward regimoney(ActionMapping mapping,ActionForm form,HttpServletRequest req,HttpServletResponse res) throws Exception {
+    public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest req,HttpServletResponse res) throws Exception {
 
     	int rcvItemNum = Integer.parseInt(req.getParameter("selecteditem"));
     	int rcvbuymount = Integer.parseInt(req.getParameter("buyamount"));

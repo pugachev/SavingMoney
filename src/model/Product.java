@@ -1,11 +1,22 @@
 package model;
 
+import java.util.HashMap;
+
 public class Product {
     private int id;
     private int itemnum;
     private int buyamount;
+    HashMap<String,String> map ;
     private String buydate;
+    
+    
 
+	public HashMap<String, String> getMap() {
+		return map;
+	}
+	public void setMap(HashMap<String, String> map) {
+		this.map = map;
+	}
 	public int getId() {
 		return id;
 	}

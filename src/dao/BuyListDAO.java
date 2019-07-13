@@ -16,7 +16,7 @@ import model.Product;
 public class BuyListDAO {
 
 	//購入品一覧を取得するSQL
-    private static final String SELECT = "select * from buylist";
+    private static final String SELECT = "select * from buylist where between buydate ? and ?" ;
 
     //購入品を追加するSQL
 	private static final String INSERTBUYLIST = "insert into buylist(itemnum,buyamount,buydate) values(?,?,?);";
@@ -63,7 +63,8 @@ public class BuyListDAO {
         return ret;
     }
 
-    public List<Product> getProductList() throws SQLException {
+    //対象月のリストを作る
+    public List<Product> getProductList(String start,String end) throws SQLException {
         List<Product> list = new ArrayList<Product>();
         Connection con = null;
         PreparedStatement pStmt = null;
@@ -74,9 +75,19 @@ public class BuyListDAO {
             con = source.getConnection();
 
             pStmt = con.prepareStatement(SELECT);
+            pStmt.setString(1,start);
+            pStmt.setString(2,end);
             rs = pStmt.executeQuery();
 
-            while (rs.next()) {
+            while (rs.next())
+            {
+
+
+
+
+
+
+
                 list.add(getProduct(rs));
             }
 

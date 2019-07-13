@@ -1,6 +1,7 @@
 
 package action;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
@@ -20,6 +21,7 @@ import model.Product;
 public class SavingMoneyListAction extends Action {
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest req,HttpServletResponse res) throws Exception {
 
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     	//データ取得処理
     	if(req.getParameter("tmonth")!=null)
     	{
@@ -54,10 +56,7 @@ public class SavingMoneyListAction extends Action {
             BuyListDAO dao = new BuyListDAO();
             List<Product> rcv = dao.getProductList(targetStart,targetEnd);
 
-            for(int i=0;i<rcv.size();i++)
-            {
-            	System.out.println(rcv.get(i).getId()+ " " + rcv.get(i).getBuyamount());
-            }
+            req.getSession(true).setAttribute("buydata", rcv);
     	}
 
 

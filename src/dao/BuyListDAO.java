@@ -16,13 +16,13 @@ import model.Product;
 public class BuyListDAO {
 
 	//購入品一覧を取得するSQL
-    private static final String SELECT = "select * from buylist where between buydate ? and ?" ;
+    private static final String SELECT = "select * from buylist where buydate " ;
 
     //購入品を追加するSQL
 	private static final String INSERTBUYLIST = "insert into buylist(itemnum,buyamount,buydate) values(?,?,?);";
 
 	//選択日に使った合計金額を取得するSQL
-	private static final String SELECTAMOUNTBYDAY = "select buydate,sum(buyamount) as buyamount from buylist group by ?";
+	private static final String SELECTAMOUNTBYDAY = "select buydate,sum(buyamount) as buyamount from buylist group by ?;";
 
     private DataSource source;
 
@@ -63,8 +63,49 @@ public class BuyListDAO {
         return ret;
     }
 
+    static public String substitute(String input, String pattern, String replacement) {
+
+        // 置換対象文字列が存在する場所を取得
+
+        int index = input.indexOf(pattern);
+
+
+
+        // 置換対象文字列が存在しなければ終了
+
+        if(index == -1) {
+
+            return input;
+
+        }
+
+
+
+        // 処理を行うための StringBuffer
+
+        StringBuffer buffer = new StringBuffer();
+
+
+
+        buffer.append(input.substring(0, index) + replacement);
+
+
+
+        if(index + pattern.length() < input.length()) {
+
+            // 残りの文字列を再帰的に置換
+
+            String rest = input.substring(index + pattern.length(), input.length());
+
+            buffer.append(substitute(rest, pattern, replacement));
+
+        }
+
+        return buffer.toString();
+    }
+
     //対象月のリストを作る
-    public List<Product> getProductList(String start,String end) throws SQLException {
+    public List<Product> getProductList(String date,String date2) throws SQLException {
         List<Product> list = new ArrayList<Product>();
         Connection con = null;
         PreparedStatement pStmt = null;
@@ -73,21 +114,12 @@ public class BuyListDAO {
         try {
 
             con = source.getConnection();
-
-            pStmt = con.prepareStatement(SELECT);
-            pStmt.setString(1,start);
-            pStmt.setString(2,end);
+            String sqltmp = "select * from buylist where buydate " +" between '"+ date+ "' and '" + date2 +"'";
+            pStmt = con.prepareStatement(sqltmp);
             rs = pStmt.executeQuery();
 
             while (rs.next())
             {
-
-
-
-
-
-
-
                 list.add(getProduct(rs));
             }
 
@@ -131,7 +163,7 @@ public class BuyListDAO {
         pro.setId(rs.getInt("id"));
         pro.setItemnum(rs.getInt("itemnum"));
         pro.setBuyamount(rs.getInt("buyamount"));
-
+        pro.setBuydate(rs.getString("buydate"));
         return pro;
     }
     private Date nowDate() {

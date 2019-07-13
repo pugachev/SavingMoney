@@ -3,6 +3,15 @@
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
 <%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
+<%@page import="model.Product" %>
+<%@page import="java.util.*" %>
+<%
+	List<Product> mList = (List<Product>)session.getAttribute("buydata");
+	for(int i=0;i<mList.size();i++)
+	{
+		System.out.println(mList.get(i).getId()+ " " + mList.get(i).getItemnum() + " " + mList.get(i).getBuyamount() + " " + mList.get(i).getBuydate());
+	}
+%>
 <!DOCTYPE html>
 <html class="no-js">
 	<head>

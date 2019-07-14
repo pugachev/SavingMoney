@@ -8,9 +8,18 @@ public class Product {
     private int buyamount;
     HashMap<String,String> map ;
     private String buydate;
-    
-    
+    private String regidate;
 
+
+
+
+
+	public String getRegidate() {
+		return regidate;
+	}
+	public void setRegidate(String regidate) {
+		this.regidate = regidate;
+	}
 	public HashMap<String, String> getMap() {
 		return map;
 	}

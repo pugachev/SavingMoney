@@ -6,11 +6,28 @@
 <%@page import="model.Product" %>
 <%@page import="java.util.*" %>
 <%
+	String rcvCalendar="";
 	List<Product> mList = (List<Product>)session.getAttribute("buydata");
 	for(int i=0;i<mList.size();i++)
 	{
-		System.out.println(mList.get(i).getId()+ " " + mList.get(i).getItemnum() + " " + mList.get(i).getBuyamount() + " " + mList.get(i).getBuydate());
+		StringBuilder tmp = new StringBuilder();
+		/* System.out.println(mList.get(i).getId()+ " " + mList.get(i).getItemnum() + " " + mList.get(i).getBuyamount() + " " + mList.get(i).getBuydate()); */
+		String[] splitmp = mList.get(i).getBuydate().split("-");
+		String aftertmp = splitmp[1]+"-"+splitmp[2]+"-"+splitmp[0];
+		System.out.println(aftertmp);
+		tmp.append("\"");
+		tmp.append(aftertmp);
+		tmp.append("\"");
+		tmp.append(":");
+		tmp.append("\"");
+		tmp.append(mList.get(i).getBuyamount());
+		tmp.append("\"");
+		tmp.append(",");
+		/* tmp.append(System.getProperty("line.separator")); */
+		rcvCalendar += tmp.toString();
 	}
+	System.out.println(rcvCalendar);
+
 %>
 <!DOCTYPE html>
 <html class="no-js">
@@ -59,18 +76,21 @@
 						<form action="${pageContext.request.contextPath}/SavingMoneyRegist.do" method="post">
 							<div class="modal-body">
 								<div class="form-group">
-								  <label for="select1a">品目:</label>
-								  <select id="selecteditem" name="selecteditem" class="form-control">
-								    <option value="1">食費</option>
-								    <option value="2">日用品</option>
-								  </select>
+									<label for="select1a">品目:</label>
+									<select id="selecteditem" name="selecteditem" class="form-control">
+									  <option value="1">食費</option>
+									  <option value="2">日用品</option>
+									</select>
 								</div>
 								<div class="form-group">
-								  <label for="text1">金額:</label>
-								  <input type="text" id="text1" name="buyamount" class="form-control">
+								  	<label for="text1">金額:</label>
+								  	<input type="text" id="text1" name="buyamount" class="form-control">
+								</div>
+								<div class="form-group">
+									<input type="hidden" id="targetdate" name="targetdate" value="">
 								</div>
 							</div>
-							<div id="targetdate"></div>
+
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
 								<button type="submit" class="btn btn-primary" >保存する</button>
@@ -87,11 +107,15 @@
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.calendario.js"></script>
 		<script type="text/javascript">
+		function yyyymmdd(y, m, d) {
+		    var y0 = ('000' + y).slice(-4);
+		    var m0 = ('0' + m).slice(-2);
+		    var d0 = ('0' + d).slice(-2);
+		    return y0 + m0 + d0;
+		}
 			$(function() {
-				var codropsEvents = {
-						"07-20-2019": "テスト投稿1"
-						}
-				var cal = $( '#calendar' ).calendario( {
+				var codropsEvents = {<%= rcvCalendar %>}
+                var cal = $( '#calendar' ).calendario( {
 						onDayClick : function( $el, $contentEl, dateProperties ) {
 							// for( var key in dateProperties ) {
 							// 	console.log( key + ' = ' + dateProperties[ key ] );
@@ -106,8 +130,9 @@
 							            return false;
 							        }); */
 									$('#exampleModal').modal();
-							        var choicedate = dateProperties[ 'year' ]+' 年 ' + dateProperties[ 'month' ] + ' 月 ' + dateProperties[ 'day' ] + ' 日';
-							        $('#targetdate').text(choicedate);
+							        /* var choicedate = dateProperties[ 'year' ]+' 年 ' + dateProperties[ 'month' ] + ' 月 ' + dateProperties[ 'day' ] + ' 日'; */
+							        var choicedate = dateProperties[ 'year' ]+'-' + ('0' + dateProperties[ 'month' ]).slice(-2) + '-' + ('0' + dateProperties[ 'day' ]).slice(-2);
+							        $('#targetdate').val(choicedate);
 								}
 							// }
 						},

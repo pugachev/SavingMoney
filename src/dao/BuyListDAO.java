@@ -19,7 +19,7 @@ public class BuyListDAO {
     private static final String SELECT = "select * from buylist where buydate " ;
 
     //購入品を追加するSQL
-	private static final String INSERTBUYLIST = "insert into buylist(itemnum,buyamount,buydate) values(?,?,?);";
+	private static final String INSERTBUYLIST = "insert into buylist(itemnum,buyamount,buydate,regidate) values(?,?,?,?);";
 
 	//選択日に使った合計金額を取得するSQL
 	private static final String SELECTAMOUNTBYDAY = "select buydate,sum(buyamount) as buyamount from buylist group by ?;";
@@ -61,47 +61,6 @@ public class BuyListDAO {
         }
 
         return ret;
-    }
-
-    static public String substitute(String input, String pattern, String replacement) {
-
-        // 置換対象文字列が存在する場所を取得
-
-        int index = input.indexOf(pattern);
-
-
-
-        // 置換対象文字列が存在しなければ終了
-
-        if(index == -1) {
-
-            return input;
-
-        }
-
-
-
-        // 処理を行うための StringBuffer
-
-        StringBuffer buffer = new StringBuffer();
-
-
-
-        buffer.append(input.substring(0, index) + replacement);
-
-
-
-        if(index + pattern.length() < input.length()) {
-
-            // 残りの文字列を再帰的に置換
-
-            String rest = input.substring(index + pattern.length(), input.length());
-
-            buffer.append(substitute(rest, pattern, replacement));
-
-        }
-
-        return buffer.toString();
     }
 
     //対象月のリストを作る
@@ -146,7 +105,8 @@ public class BuyListDAO {
 
             pStmt.setInt(1,pro.getItemnum());
             pStmt.setInt(2,pro.getBuyamount());
-            pStmt.setDate(3,now);
+            pStmt.setString(3,pro.getBuydate());
+            pStmt.setDate(4,now);
             pStmt.executeUpdate();
 
         }catch(SQLException ex){

@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <HTML>
   <HEAD>
-   <META http-equiv="refresh" content="0; url=/SavingMoney/SavingMoneyList.do">
+   <META http-equiv="refresh" content="0; url=/savingmoney/SavingMoneyList.do">
   </HEAD>
   <BODY>
   </BODY>

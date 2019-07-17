@@ -56,6 +56,10 @@ public class SavingMoneyListAction extends Action {
             BuyListDAO dao = new BuyListDAO();
             List<Product> rcv = dao.getProductList(targetStart,targetEnd);
 
+            int amountmonth = dao.getAmountByMonth(targetStart,targetEnd);
+            System.out.println("amountmonth="+amountmonth);
+            req.getSession(true).setAttribute("amountmonth", amountmonth);
+
             req.getSession(true).setAttribute("buydata", rcv);
     	}
 

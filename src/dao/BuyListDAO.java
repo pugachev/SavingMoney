@@ -18,6 +18,9 @@ public class BuyListDAO {
 	//購入品一覧を取得するSQL
     private static final String SELECT = "select * from buylist where buydate " ;
 
+    //対象月の合計金額を取得するSQL
+    private static final String SELECTAMOUNTBYMONTH = "select sum(buyamount) as buyamount from buylist where buydate between";
+
     //購入品を追加するSQL
 	private static final String INSERTBUYLIST = "insert into buylist(itemnum,buyamount,buydate,regidate) values(?,?,?,?);";
 
@@ -29,6 +32,8 @@ public class BuyListDAO {
     public BuyListDAO() {
         source = DaoUtil.getSource();
     }
+
+
 
     public int getAmount(String date) throws SQLException
     {
@@ -63,6 +68,40 @@ public class BuyListDAO {
         return ret;
     }
 
+    public int getAmountByMonth(String date,String date2) throws SQLException
+    {
+        Connection con = null;
+        PreparedStatement pStmt = null;
+        ResultSet rs = null;
+
+        int ret=0;
+
+        try {
+
+            con = source.getConnection();
+
+            String sqltmp = "select sum(buyamount) as buyamount from buylist where buydate " +" between '"+ date+ "' and '" + date2 +"'";
+
+            pStmt = con.prepareStatement(sqltmp);
+            rs = pStmt.executeQuery();
+
+            while (rs.next()) {
+                ret=rs.getInt("buyamount");
+            }
+
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            if(rs != null){
+                rs.close();
+            }
+            pStmt.close();
+            con.close();
+        }
+
+        return ret;
+    }
+
     //対象月のリストを作る
     public List<Product> getProductList(String date,String date2) throws SQLException {
         List<Product> list = new ArrayList<Product>();
@@ -73,13 +112,13 @@ public class BuyListDAO {
         try {
 
             con = source.getConnection();
-            String sqltmp = "select * from buylist where buydate " +" between '"+ date+ "' and '" + date2 +"'";
+            String sqltmp = "select buydate,sum(buyamount) as buyamount from buylist where buydate " +" between '"+ date+ "' and '" + date2 +"'" + "group by buydate";
             pStmt = con.prepareStatement(sqltmp);
             rs = pStmt.executeQuery();
 
             while (rs.next())
             {
-                list.add(getProduct(rs));
+                list.add(getProductAmount(rs));
             }
 
         } catch (SQLException ex) {
@@ -115,6 +154,14 @@ public class BuyListDAO {
             pStmt.close();
             con.close();
         }
+    }
+
+    private Product getProductAmount(ResultSet rs) throws SQLException {
+        Product pro = new Product();
+
+        pro.setBuyamount(rs.getInt("buyamount"));
+        pro.setBuydate(rs.getString("buydate"));
+        return pro;
     }
 
     private Product getProduct(ResultSet rs) throws SQLException {

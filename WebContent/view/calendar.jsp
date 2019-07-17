@@ -28,6 +28,8 @@
 	}
 	System.out.println(rcvCalendar);
 
+	int tmpamountmonth = (int)session.getAttribute("amountmonth");
+
 %>
 <!DOCTYPE html>
 <html class="no-js">
@@ -49,7 +51,7 @@
 		<div class="container">
 			<div id="icesword" class="custom-calendar-wrap custom-calendar-full">
 				<div class="custom-header clearfix">
-					<h2>池フク式 節約カレンダー</h2>
+					<h2>池フク式 節約Calendar <%= tmpamountmonth %></h2>
 					<h3 class="custom-month-year">
 						<span id="custom-month" class="custom-month"></span>
 						<span id="custom-year" class="custom-year"></span>
@@ -111,7 +113,7 @@
 		    var y0 = ('000' + y).slice(-4);
 		    var m0 = ('0' + m).slice(-2);
 		    var d0 = ('0' + d).slice(-2);
-		    return y0 + m0 + d0;
+            return y0 + m0 + d0;
 		}
 			$(function() {
 				var codropsEvents = {<%= rcvCalendar %>}

@@ -18,13 +18,13 @@ public class SavingMoneyRegistAction extends DispatchAction {
 
     	String rcvTargetDate = req.getParameter("targetdate");
     	int rcvItemNum = Integer.parseInt(req.getParameter("selecteditem"));
-    	int rcvbuymount = Integer.parseInt(req.getParameter("buyamount"));
+    	int rcvPrice = Integer.parseInt(req.getParameter("price"));
 
-    	System.out.println("rcvTargetDate="+rcvTargetDate+" rcvItemNum=" + rcvItemNum + " rcvbuymount=" + rcvbuymount);
+    	System.out.println("rcvTargetDate="+rcvTargetDate+" rcvItemNum=" + rcvItemNum + " rcvPrice=" + rcvPrice);
 
     	Product tmp = new Product();
     	tmp.setItemnum(rcvItemNum);
-    	tmp.setBuyamount(rcvbuymount);
+    	tmp.setPrice(rcvPrice);
     	tmp.setBuydate(rcvTargetDate);
 
         BuyListDAO dao = new BuyListDAO();

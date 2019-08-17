@@ -25,6 +25,7 @@ public class SavingMoneyListAction extends Action {
     	//データ取得処理
     	if(req.getParameter("tmonth")!=null)
     	{
+			System.out.println("tmonth="+req.getParameter("tmonth"));
         	//画面からポストしてくる対象月
         	int targetMonth =  Integer.parseInt(req.getParameter("tmonth"));
         	//対象月の末尾
@@ -39,8 +40,18 @@ public class SavingMoneyListAction extends Action {
 
             for(int i=0;i<rcv.size();i++)
             {
-            	System.out.println(rcv.get(i).getId()+ " " + rcv.get(i).getBuyamount());
+            	System.out.println(rcv.get(i).getId()+ " " + rcv.get(i).getPrice());
             }
+
+            int amountmonth = dao.getAmountByMonth(targetStart,targetEnd);
+            System.out.println("amountmonth="+amountmonth);
+            req.getSession(true).setAttribute("amountmonth", amountmonth);
+
+            req.getSession(true).setAttribute("buydata", rcv);
+
+            String tmpTarget = (String)req.getParameter("tmonth")+"月";
+
+            req.getSession(true).setAttribute("targetMonth", tmpTarget);
     	}
     	else
     	{
@@ -61,6 +72,8 @@ public class SavingMoneyListAction extends Action {
             req.getSession(true).setAttribute("amountmonth", amountmonth);
 
             req.getSession(true).setAttribute("buydata", rcv);
+
+            req.getSession(true).setAttribute("targetMonth", String.valueOf(targetMonth)+"月");
     	}
 
 

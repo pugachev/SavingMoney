@@ -5,175 +5,39 @@
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
 <%@page import="model.Product" %>
 <%@page import="java.util.*" %>
-<%
-	String rcvCalendar="";
-	List<Product> mList = (List<Product>)session.getAttribute("buydata");
-	for(int i=0;i<mList.size();i++)
-	{
-		StringBuilder tmp = new StringBuilder();
-		/* System.out.println(mList.get(i).getId()+ " " + mList.get(i).getItemnum() + " " + mList.get(i).getBuyamount() + " " + mList.get(i).getBuydate()); */
-		String[] splitmp = mList.get(i).getBuydate().split("-");
-		String aftertmp = splitmp[1]+"-"+splitmp[2]+"-"+splitmp[0];
-		System.out.println(aftertmp);
-		tmp.append("\"");
-		tmp.append(aftertmp);
-		tmp.append("\"");
-		tmp.append(":");
-		tmp.append("\"");
-		tmp.append(mList.get(i).getBuyamount());
-		tmp.append("\"");
-		tmp.append(",");
-		/* tmp.append(System.getProperty("line.separator")); */
-		rcvCalendar += tmp.toString();
-	}
-	System.out.println(rcvCalendar);
-
-	int tmpamountmonth = (int)session.getAttribute("amountmonth");
-
-%>
 <!DOCTYPE html>
 <html class="no-js">
 	<head>
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Flexible Calendar</title>
-		<meta name="description" content="Flexible Calendar with jQuery and CSS3" />
-		<meta name="keywords" content="responsive, calendar, jquery, plugin, full page, flexible, javascript, css3, media queries" />
-		<meta name="author" content="Codrops" />
-		<link rel="shortcut icon" href="../favicon.ico">
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/calendar.css" />
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/custom_1.css" />
-		<script src="${pageContext.request.contextPath}/js/modernizr.custom.63321.js"></script>
-	</head>
-	<body>
-		<div class="container">
-			<div id="icesword" class="custom-calendar-wrap custom-calendar-full">
-				<div class="custom-header clearfix">
-					<h2>池フク式 節約Calendar <%= tmpamountmonth %></h2>
-					<h3 class="custom-month-year">
-						<span id="custom-month" class="custom-month"></span>
-						<span id="custom-year" class="custom-year"></span>
-						<nav>
-							<span id="custom-prev" class="custom-prev"></span>
-							<span id="custom-next" class="custom-next"></span>
-							<span id="custom-current" class="custom-current" title="Got to current date"></span>
-						</nav>
-					</h3>
-				</div>
-				<div id="calendar" class="fc-calendar-container"></div>
-			</div>
+		<title>節約カレンダー</title>
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+		<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+		<script src="${pageContext.request.contextPath}/js/jquery.minicalendar.js"></script>
+		<style>
+		</style>
+		<script>
+			$(document).ready(function(){
 
-			<!-- モーダル部分始まり -->
-			<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-				<div class="modal-dialog" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLabel">タイトル</h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<form action="${pageContext.request.contextPath}/SavingMoneyRegist.do" method="post">
-							<div class="modal-body">
-								<div class="form-group">
-									<label for="select1a">品目:</label>
-									<select id="selecteditem" name="selecteditem" class="form-control">
-									  <option value="1">食費</option>
-									  <option value="2">日用品</option>
-									</select>
-								</div>
-								<div class="form-group">
-								  	<label for="text1">金額:</label>
-								  	<input type="text" id="text1" name="buyamount" class="form-control">
-								</div>
-								<div class="form-group">
-									<input type="hidden" id="targetdate" name="targetdate" value="">
-								</div>
-							</div>
+			});
 
-							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
-								<button type="submit" class="btn btn-primary" >保存する</button>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-			<!-- モーダル部分終わり -->
-		</div><!-- /container -->
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.calendario.js"></script>
-		<script type="text/javascript">
-		function yyyymmdd(y, m, d) {
-		    var y0 = ('000' + y).slice(-4);
-		    var m0 = ('0' + m).slice(-2);
-		    var d0 = ('0' + d).slice(-2);
-            return y0 + m0 + d0;
-		}
-			$(function() {
-				var codropsEvents = {<%= rcvCalendar %>}
-                var cal = $( '#calendar' ).calendario( {
-						onDayClick : function( $el, $contentEl, dateProperties ) {
-							// for( var key in dateProperties ) {
-							// 	console.log( key + ' = ' + dateProperties[ key ] );
-							// 	var tmp = '.fc-item-'+dateProperties[ key ];
-								if(dateProperties[ 'day' ]==$el.find('.fc-date')[0].textContent){
-									var tmp = '.fc-item-'+dateProperties[ 'day' ];
-									/* $(tmp)[0].append('雑草取り機 2000円'); */
-/* 							        $("#overlay, #modal").addClass("active");
-
-							        $("#close, #overlay").on("click", function() {
-							            $("#overlay, #modal").removeClass("active");
-							            return false;
-							        }); */
-									$('#exampleModal').modal();
-							        /* var choicedate = dateProperties[ 'year' ]+' 年 ' + dateProperties[ 'month' ] + ' 月 ' + dateProperties[ 'day' ] + ' 日'; */
-							        var choicedate = dateProperties[ 'year' ]+'-' + ('0' + dateProperties[ 'month' ]).slice(-2) + '-' + ('0' + dateProperties[ 'day' ]).slice(-2);
-							        $('#targetdate').val(choicedate);
-								}
-							// }
-						},
-						caldata : codropsEvents
-					} ),
-					$month = $( '#custom-month' ).html( cal.getMonthName() ),
-					$year = $( '#custom-year' ).html( cal.getYear() );
-
-				$( '#custom-next' ).on( 'click', function() {
-					cal.gotoNextMonth( updateMonthYear );
-				} );
-				$( '#custom-prev' ).on( 'click', function() {
-					cal.gotoPreviousMonth( updateMonthYear );
-				} );
-				$( '#custom-current' ).on( 'click', function() {
-					cal.gotoNow( updateMonthYear );
-				} );
-
-				function updateMonthYear() {
-					$month.html( cal.getMonthName() );
-					$year.html( cal.getYear() );
-				}
-
-				// you can also add more data later on. As an example:
-				/*
-				someElement.on( 'click', function() {
-
-					cal.setData( {
-						'03-01-2013' : '<a href="#">testing</a>',
-						'03-10-2013' : '<a href="#">testing</a>',
-						'03-12-2013' : '<a href="#">testing</a>'
-					} );
-					// goes to a specific month/year
-					cal.goto( 3, 2013, updateMonthYear );
-
-				} );
-				*/
+			$(window).on('load',function(){
+			 	$('#mini-calendar').miniCalendar();
+				$('#targetTable td').on('click',function(){
+					var td = $(this)[0];
+					var tr = $(this).closest('tr')[0];
+					console.log('td:'+td.cellIndex);
+					console.log('tr:'+tr.rowIndex);
+					console.log($(this).text());
+				});
 			});
 		</script>
+	</head>
+	<body>
+		<div id="wrap">
+			<div id="mini-calendar"></div>
+		</div>
 	</body>
 
 </html>

@@ -5,15 +5,17 @@ import java.util.HashMap;
 public class Product {
     private int id;
     private int itemnum;
-    private int buyamount;
+    private int price;
     HashMap<String,String> map ;
     private String buydate;
     private String regidate;
 
-
-
-
-
+	public int getPrice() {
+		return price;
+	}
+	public void setPrice(int price) {
+		this.price = price;
+	}
 	public String getRegidate() {
 		return regidate;
 	}
@@ -38,12 +40,7 @@ public class Product {
 	public void setItemnum(int itemnum) {
 		this.itemnum = itemnum;
 	}
-	public int getBuyamount() {
-		return buyamount;
-	}
-	public void setBuyamount(int buyamount) {
-		this.buyamount = buyamount;
-	}
+
 	public String getBuydate() {
 		return buydate;
 	}

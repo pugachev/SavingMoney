@@ -131,12 +131,17 @@
 		_getBody : function() {
 
 			var d = new Date( this.year, this.month + 1, 0 ),
+
 				// number of days in the month
 				monthLength = d.getDate(),
 				firstDay = new Date( this.year, this.month, 1 );
 
+
+
 			// day of the week
 			this.startingDay = firstDay.getDay();
+
+			console.log('debug0 this.year='+this.year+' this.month='+this.month + ' this.startingDay='+ this.startingDay);
 
 			var html = '<div class="fc-body"><div class="fc-row">',
 				// fill in the days
@@ -159,6 +164,7 @@
 						inner += '<span class="fc-date">' + day + '</span><span class="fc-weekday">' + this.options.weekabbrs[ j + this.options.startIn > 6 ? j + this.options.startIn - 6 - 1 : j + this.options.startIn ] + '</span>';
 //						inner += '<br/>';
 //						inner += '<span class="fc-item-'+day+'">'+"jsonデータ風"+'</span>';
+						console.log('debug1 i=' + i + ' j=' + j);
 						// this day is:
 						var strdate = ( this.month + 1 < 10 ? '0' + ( this.month + 1 ) : this.month + 1 ) + '-' + ( day < 10 ? '0' + day : day ) + '-' + this.year,
 							dayData = this.caldata[ strdate ];
@@ -242,6 +248,7 @@
 				if( period === 'month' ) {
 					this.year = this.month > 0 ? this.year : --this.year;
 					this.month = this.month > 0 ? --this.month : 11;
+					console.log('this.year='+this.year+' this.month='+this.month);
 				}
 				else if( period === 'year' ) {
 					this.year = --this.year;

@@ -30,12 +30,24 @@
 				$('#targetTable td').on('click',function(){
 					var td = $(this)[0];
 					var tr = $(this).closest('tr')[0];
-					console.log('td:'+td.cellIndex);
-					console.log('tr:'+tr.rowIndex);
-					console.log($(this).text());
+					//console.log('td:'+td.cellIndex);
+					//console.log('tr:'+tr.rowIndex);
+					//console.log($(this).text().slice( 0, 2));
 					$('#exampleModal').modal();
+					//var targetDay = "'#calender-id" + $(this).text() + " .calendar-labels'";
+					//console.log($('#calender-id'+$(this).text().slice( 0, 2)+' .calendar-labels')[0].children.length);
+					var datalen = $('#calender-id'+$(this).text().slice( 0, 2)+' .calendar-labels')[0].children.length;
+					$('#regitemlist')[0].textContent='';
+					for(var i=0;i<datalen;i++){
+						//$('#calender-id'+$(this).text().slice( 0, 2)+' .calendar-labels')[0].children[i].textContent;
+						console.log($('#calender-id'+$(this).text().slice( 0, 2)+' .calendar-labels')[0].children[i].textContent);
+						$('#regitemlist').append($('#calender-id'+$(this).text().slice( 0, 2)+' .calendar-labels')[0].children[i].textContent);
+						$('#regitemlist').append('\n');
+					}
+					//console.log($(targetDay)[0].children.length);
 				});
-				console.log($('#"hiddenData"').value);
+				//$('#calender-id12 .calendar-labels')[0].children.length
+				//$('#calender-id12 .calendar-labels')[0].children[0].textContent
 			});
 		</script>
 	</head>
@@ -57,11 +69,21 @@
 			</div>
 				<form action="${pageContext.request.contextPath}/SavingMoneyRegist.do" method="post">
 					<div class="modal-body">
+						<div class="form-group shadow-textarea">
+						  <label for="exampleFormControlTextarea6">登録データ一覧</label>
+						  <textarea class="form-control z-depth-1" id="regitemlist" rows="6" placeholder="登録データ一覧"></textarea>
+						</div>
 						<div class="form-group">
 							<label for="select1a">品目:</label>
 							<select id="selecteditem" name="selecteditem" class="form-control">
 							  <option value="1">食費</option>
-							  <option value="2">日用品</option>
+							  <option value="2">外食費</option>
+							  <option value="3">交通費</option>
+							  <option value="4">交際費</option>
+							  <option value="5">ガソリン代</option>
+							  <option value="6">税金</option>
+							  <option value="7">日用品</option>
+							  <option value="8">生活費</option>
 							</select>
 						</div>
 						<div class="form-group">

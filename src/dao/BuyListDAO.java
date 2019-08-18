@@ -102,6 +102,38 @@ public class BuyListDAO {
         return ret;
     }
 
+    //対象付きのショピングリストを作成する
+    public List<Product> getShoppingList(String date,String date2) throws SQLException
+    {
+        List<Product> list = new ArrayList<Product>();
+        Connection con = null;
+        PreparedStatement pStmt = null;
+        ResultSet rs = null;
+
+        try
+        {
+            con = source.getConnection();
+            String sqltmp = "select buylist.id as id,buylist.price as price,buylist.buydate as buydate,buylist.regidate as regidate,itemlist.title as title from buylist  left join itemlist on buylist.itemnum = itemlist.itemnum where buydate " +" between '"+ date+ "' and '" + date2 +"'" + " order by  buydate asc";
+            pStmt = con.prepareStatement(sqltmp);
+            rs = pStmt.executeQuery();
+
+            while (rs.next())
+            {
+                list.add(getProduct(rs));
+            }
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            if(rs != null){
+                rs.close();
+            }
+            pStmt.close();
+            con.close();
+        }
+
+        return list;
+    }
+
     //対象月のリストを作る
     public List<Product> getProductList(String date,String date2) throws SQLException {
         List<Product> list = new ArrayList<Product>();
@@ -168,8 +200,9 @@ public class BuyListDAO {
         Product pro = new Product();
 
         pro.setId(rs.getInt("id"));
-        pro.setItemnum(rs.getInt("itemnum"));
+//        pro.setItemnum(rs.getInt("itemnum"));
         pro.setPrice(rs.getInt("price"));
+        pro.setTitle(rs.getString("title"));
         pro.setBuydate(rs.getString("buydate"));
         return pro;
     }

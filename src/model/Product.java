@@ -5,7 +5,14 @@ import java.util.HashMap;
 public class Product {
     private int id;
     private int itemnum;
-    private int price;
+    private String title;
+    public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	private int price;
     HashMap<String,String> map ;
     private String buydate;
     private String regidate;

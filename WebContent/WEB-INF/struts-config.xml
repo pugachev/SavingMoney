@@ -13,6 +13,10 @@
       <forward name="success" path="/view/calendar.jsp"/>
     </action>
 
+    <action name="SavingMoneyListForm" type="action.SavingMoneyListAjaxAction" path="/SavingMoneyListAjax">
+      <forward name="success" path="/view/calendar.jsp"/>
+    </action>
+
     <action name="SavingMoneyRegistForm" type="action.SavingMoneyRegistAction" path="/SavingMoneyRegist">
       <forward name="success" path="/SavingMoneyList.do"/>
     </action>

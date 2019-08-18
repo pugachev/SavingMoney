@@ -23,7 +23,7 @@
     this.holiday = "";
 
     // jsonファイルから読み込む
-//    this.loadData();
+    this.loadData();
 
     //表示する年月
     this.year = this.year || new Date().getFullYear();
@@ -128,7 +128,7 @@
     setEvent : function() {
       for(var i = 0; i < this.events.length; i++) {
         var dateID = 'calender-id' + this.events[i].day;
-        var getText = $('<textarea>' + this.events[i].title + '</textarea>');
+        var getText = $('<textarea>' + this.events[i].title + ' : ' + this.events[i].price + '</textarea>');
         // typeがある場合classを付与
         var type = "";
         if (this.events[i].type) {
@@ -140,8 +140,10 @@
       }
 
       // 休日
-      for (var i=0; i<this.holiday.length; i++) {
-        $(this.ele).find('#calender-id' + this.holiday[i]).addClass('calendar-holiday');
+      if(this.holiday!=null && this.holiday.length>0){
+          for (var i=0; i<this.holiday.length; i++) {
+              $(this.ele).find('#calender-id' + this.holiday[i]).addClass('calendar-holiday');
+            }
       }
     },
 
@@ -151,11 +153,15 @@
     loadData : function() {
       var self = this;
       $.ajax({
+    	beforeSend: function(xhr){
+    	      xhr.overrideMimeType('text/html;charset=UTF-8');
+    	},
         type: "GET",
-        url: self.opts.jsonData,
+        url:  'http://localhost:8080/savingmoney/SavingMoneyListAjax.do',
         dataType: "json",
         async: false,
         success: function(data){
+          rcvEvents=data.event;
           self.events = data.event;
           self.year = data.year;
           self.month = data.month;

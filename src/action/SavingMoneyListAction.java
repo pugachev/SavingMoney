@@ -85,6 +85,8 @@ public class SavingMoneyListAction extends Action {
             	obj2.put("title",rcv.get(i).getTitle());
             	//金額をセット
             	obj2.put("price",rcv.get(i).getPrice());
+            	//idをセット
+            	obj2.put("id",rcv.get(i).getId());
             	jsonArray.add(obj2);
             }
 

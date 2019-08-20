@@ -21,33 +21,83 @@
 		<style>
 		</style>
 		<script>
+			var contentsarray=[];
 			$(document).ready(function(){
 
 			});
 
 			$(window).on('load',function(){
+				$(document).on("click", ".targettable tr", function(){
+					var td = $(this)[0];
+					var tr = $(this).closest('tr')[0];
+				});
+
+			   	var headarray =['ID','項目','値段'];
+		   		contentsarray=[];
 			 	$('#mini-calendar').miniCalendar();
 				$('#targetTable td').on('click',function(){
 					var td = $(this)[0];
 					var tr = $(this).closest('tr')[0];
-					//console.log('td:'+td.cellIndex);
-					//console.log('tr:'+tr.rowIndex);
-					//console.log($(this).text().slice( 0, 2));
-					$('#exampleModal').modal();
-					//var targetDay = "'#calender-id" + $(this).text() + " .calendar-labels'";
-					//console.log($('#calender-id'+$(this).text().slice( 0, 2)+' .calendar-labels')[0].children.length);
-					var datalen = $('#calender-id'+$(this).text().slice( 0, 2)+' .calendar-labels')[0].children.length;
-					$('#regitemlist')[0].textContent='';
-					for(var i=0;i<datalen;i++){
-						//$('#calender-id'+$(this).text().slice( 0, 2)+' .calendar-labels')[0].children[i].textContent;
-						console.log($('#calender-id'+$(this).text().slice( 0, 2)+' .calendar-labels')[0].children[i].textContent);
-						$('#regitemlist').append($('#calender-id'+$(this).text().slice( 0, 2)+' .calendar-labels')[0].children[i].textContent);
-						$('#regitemlist').append('\n');
+					var tmparray = $(this).text().split(' ');
+					if(tmparray!=null && tmparray.length>=2){
+						for(var j=1;j<tmparray.length;j++){
+							var innertmp =tmparray[j].split(':');
+							var rearray =[];
+							rearray.push(innertmp[0]);
+							rearray.push(innertmp[1]);
+							rearray.push(innertmp[2]);
+							contentsarray.push(rearray);
+						}
 					}
-					//console.log($(targetDay)[0].children.length);
+
+					$('#exampleModal').modal();
+
+					if($('table.table-bordered.table-striped.targettable')!=null){
+						$('table.table-bordered.table-striped.targettable').remove();
+					}
+
+					if(tmparray.length>=2){
+					   	// table要素を生成
+						var table = document.createElement('table');
+
+						// tr(横)部分のループ
+						for (var i = 0; i < tmparray.length; i++) {
+						    // tr要素を生成
+						    var tr = document.createElement('tr');
+						    // th・td(縦)部分のループ
+						    for (var j = 0; j < 3; j++) {
+						        // 1行目のtr要素の時
+						        if(i === 0) {
+						            // th要素を生成
+						            var th = document.createElement('th');
+						            // th要素内にテキストを追加
+						            th.textContent = headarray[j];
+						            // th要素をtr要素の子要素に追加
+						            tr.appendChild(th);
+						        } else {
+						            // td要素を生成
+						            var td = document.createElement('td');
+						            // td要素内にテキストを追加
+						            td.textContent = contentsarray[i-1][j];
+						            // td要素をtr要素の子要素に追加
+						            tr.appendChild(td);
+						        }
+						    }
+						    // tr要素をtable要素の子要素に追加
+						    table.appendChild(tr);
+						}
+
+						// 生成したtable要素を追加する
+						$('table.table-bordered.table-striped.targettable').remove()
+						$('#exampleModal .modal-body')[0].appendChild(table);
+						$('#exampleModal .modal-body table').addClass('table table-bordered table-striped targettable');
+					}
 				});
-				//$('#calender-id12 .calendar-labels')[0].children.length
-				//$('#calender-id12 .calendar-labels')[0].children[0].textContent
+
+				$("#exampleModal").on("hidden.bs.modal", function(){
+					contentsarray=[];
+					console.log('クリアしました');
+				});
 			});
 		</script>
 	</head>
@@ -69,9 +119,7 @@
 			</div>
 				<form action="${pageContext.request.contextPath}/SavingMoneyRegist.do" method="post">
 					<div class="modal-body">
-						<div class="form-group shadow-textarea">
-						  <label for="exampleFormControlTextarea6">登録データ一覧</label>
-						  <textarea class="form-control z-depth-1" id="regitemlist" rows="6" placeholder="登録データ一覧"></textarea>
+						<div class="form-group targetTable">
 						</div>
 						<div class="form-group">
 							<label for="select1a">品目:</label>

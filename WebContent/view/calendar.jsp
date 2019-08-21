@@ -5,7 +5,10 @@
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
 <%@page import="model.Product" %>
 <%@page import="java.util.*" %>
-
+<%
+	String rcvTargetMonth = (String)session.getAttribute("targetMonth");
+	System.out.println("rcvTargetMonth="+rcvTargetMonth);
+%>
 <!DOCTYPE html>
 <html class="no-js">
 	<head>
@@ -21,12 +24,19 @@
 		<style>
 		</style>
 		<script>
+		    var tmonth = <%= rcvTargetMonth %>;
+
 			var contentsarray=[];
 			$(document).ready(function(){
 
 			});
 
+			  function changeMonth(thisMonth){
+				  console.log('clickされたー'+thisMonth);
+			  }
+
 			$(window).on('load',function(){
+				console.log('tmonth=' + tmonth);
 				$(document).on("click", ".targettable tr", function(){
 					var td = $(this)[0];
 					var tr = $(this).closest('tr')[0];

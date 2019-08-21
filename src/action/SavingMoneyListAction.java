@@ -31,45 +31,16 @@ public class SavingMoneyListAction extends Action {
         	//画面からポストしてくる対象月
         	int targetMonth =  Integer.parseInt(req.getParameter("tmonth"));
         	//対象月の末尾
-        	int targetMonthLastDay = YearMonth.of(LocalDate.now().getYear(), 7).lengthOfMonth();
+        	int targetMonthLastDay = YearMonth.of(LocalDate.now().getYear(), targetMonth).lengthOfMonth();
         	//対象月の開始日
         	String targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,1);
             //対象月の終了日
         	String targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,targetMonthLastDay);
 
-            BuyListDAO dao = new BuyListDAO();
-            List<Product> rcv = dao.getProductList(targetStart,targetEnd);
-
-            for(int i=0;i<rcv.size();i++)
-            {
-            	System.out.println(rcv.get(i).getId()+ " " + rcv.get(i).getPrice());
-            }
-
-            int amountmonth = dao.getAmountByMonth(targetStart,targetEnd);
-            System.out.println("amountmonth="+amountmonth);
-            req.getSession(true).setAttribute("amountmonth", amountmonth);
-
-            req.getSession(true).setAttribute("buydata", rcv);
-
-            String tmpTarget = (String)req.getParameter("tmonth")+"月";
-
-            req.getSession(true).setAttribute("targetMonth", tmpTarget);
-    	}
-    	else
-    	{
-        	//システムから取得した対象月
-        	int targetMonth =  LocalDate.now().getMonthValue();
-        	//対象月の末尾
-        	int targetMonthLastDay = YearMonth.of(LocalDate.now().getYear(), 7).lengthOfMonth();
-        	//対象月の開始日
-        	String targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,1);
-            //対象月の終了日
-        	String targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,targetMonthLastDay);
+        	System.out.println(targetStart+" " + targetEnd);
 
             BuyListDAO dao = new BuyListDAO();
-//            List<Product> rcv = dao.getProductList(targetStart,targetEnd);
             List<Product> rcv = dao.getShoppingList(targetStart,targetEnd);
-
 
         	JSONObject obj = new JSONObject();
         	obj.put("year", LocalDate.now().getYear());
@@ -92,16 +63,45 @@ public class SavingMoneyListAction extends Action {
 
             obj.put("event", jsonArray);
             req.getSession(true).setAttribute("buydata", obj.toString());
-
-//            int amountmonth = dao.getAmountByMonth(targetStart,targetEnd);
-//            System.out.println("amountmonth="+amountmonth);
-//            req.getSession(true).setAttribute("amountmonth", amountmonth);
-
-
-
-//            req.getSession(true).setAttribute("targetMonth", String.valueOf(targetMonth)+"月");
+            req.getSession(true).setAttribute("targetMonth", String.valueOf(targetMonth));
     	}
+    	else
+    	{
+        	//システムから取得した対象月
+        	int targetMonth =  LocalDate.now().getMonthValue();
+        	//対象月の末尾
+        	int targetMonthLastDay = YearMonth.of(LocalDate.now().getYear(), 7).lengthOfMonth();
+        	//対象月の開始日
+        	String targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,1);
+            //対象月の終了日
+        	String targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,targetMonthLastDay);
 
+            BuyListDAO dao = new BuyListDAO();
+            List<Product> rcv = dao.getShoppingList(targetStart,targetEnd);
+
+        	JSONObject obj = new JSONObject();
+        	obj.put("year", LocalDate.now().getYear());
+        	obj.put("month", targetMonth);
+        	JSONArray jsonArray = new JSONArray();
+            for(int i=0;i<rcv.size();i++)
+            {
+            	JSONObject obj2 = new JSONObject();
+            	//対象日をセット
+            	String tday[] = rcv.get(i).getBuydate().split("-");
+            	obj2.put("day", tday[2]);
+            	//titleをセット
+            	obj2.put("title",rcv.get(i).getTitle());
+            	//金額をセット
+            	obj2.put("price",rcv.get(i).getPrice());
+            	//idをセット
+            	obj2.put("id",rcv.get(i).getId());
+            	jsonArray.add(obj2);
+            }
+
+            obj.put("event", jsonArray);
+            req.getSession(true).setAttribute("buydata", obj.toString());
+            req.getSession(true).setAttribute("targetMonth", String.valueOf(targetMonth));
+    	}
 
         return mapping.findForward("success");
     }

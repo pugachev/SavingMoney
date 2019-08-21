@@ -24,10 +24,21 @@ import net.sf.json.JSONObject;
 public class SavingMoneyListAjaxAction extends Action {
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest req,HttpServletResponse res) throws Exception {
 
+    	int targetMonth=0;
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    	if(req.getParameter("tmonth")!=null)
+    	{
+			System.out.println("SavingMoneyListAjaxAction tmonth(1)="+req.getParameter("tmonth"));
+        	//画面からポストしてくる対象月
+        	targetMonth =  Integer.parseInt(req.getParameter("tmonth"));
+    	}
+    	else
+    	{
+    		System.out.println("SavingMoneyListAjaxAction tmonth(2)="+req.getParameter("tmonth"));
+        	//システムから取得した対象月
+        	targetMonth =  LocalDate.now().getMonthValue();
+    	}
 
-    	//システムから取得した対象月
-    	int targetMonth =  LocalDate.now().getMonthValue();
     	//対象月の末尾
     	int targetMonthLastDay = YearMonth.of(LocalDate.now().getYear(), 7).lengthOfMonth();
     	//対象月の開始日
@@ -61,6 +72,8 @@ public class SavingMoneyListAjaxAction extends Action {
         obj.put("event", jsonArray);
 
         System.out.println("ajaxデータ " + obj.toString());
+
+        req.getSession(true).setAttribute("targetMonth", String.valueOf(targetMonth));
 
         res.setCharacterEncoding("UTF-8");
         PrintWriter writer = res.getWriter();

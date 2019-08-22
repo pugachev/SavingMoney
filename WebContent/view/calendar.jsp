@@ -40,6 +40,21 @@
 				$(document).on("click", ".targettable tr", function(){
 					var td = $(this)[0];
 					var tr = $(this).closest('tr')[0];
+					console.log($(this).children().eq(0).text()+'  '+$(this).children().eq(1).text()+'  '+$(this).children().eq(2).text());
+					var sitems = $('#selecteditem').children();
+					for(var i=0;i<sitems.length;i++){
+						if(sitems.eq(i).text()==$(this).children().eq(1).text()){
+							console.log(sitems.eq(i).val()+'  ' + sitems.eq(i).text());
+						    // 全ての選択を外す
+						    $("#selecteditem option").attr("selected", false);
+						    //選択項目を変更する
+						    $("#selecteditem").val(sitems.eq(i).val());
+
+						    //金額をセットする
+						    $('[name="buyamount"]').val($(this).children().eq(2).text());
+							break;
+						}
+					}
 				});
 
 			   	var headarray =['ID','項目','値段'];
@@ -106,6 +121,13 @@
 
 				$("#exampleModal").on("hidden.bs.modal", function(){
 					contentsarray=[];
+				    // 全ての選択を外す
+				    $("#selecteditem option").attr("selected", false);
+				    //選択項目を変更する
+				    $("#selecteditem").val(1);
+
+				    //金額をセットする
+				    $('[name="buyamount"]').val('');
 					console.log('クリアしました');
 				});
 			});

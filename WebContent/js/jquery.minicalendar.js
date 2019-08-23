@@ -33,9 +33,6 @@ $(document).ready(function(){
 	    targetmonth=tmonth;
 	    // jsonファイルから読み込む
 	    this.loadData(this.month);
-
-
-
 	    this.createFrame();
 	    this.printType(this.year, this.month);
 	    // 取得したイベントを表示
@@ -175,7 +172,7 @@ $(document).ready(function(){
 	    	      xhr.overrideMimeType('text/html;charset=UTF-8');
 	    	},
 	        type: "GET",
-	        url:  'http://localhost:8080/savingmoney/SavingMoneyListAjax.do?tmonth='+(targetmonth),
+	        url:  'SavingMoneyListAjax.do?tmonth='+(targetmonth),
 	        dataType: "json",
 	        async: false,
 	        success: function(data){

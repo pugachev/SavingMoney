@@ -22,6 +22,7 @@
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 		<script src="${pageContext.request.contextPath}/js/jquery.minicalendar.js"></script>
 		<style>
+
 		</style>
 		<script>
 		    var tmonth = <%= rcvTargetMonth %>;

@@ -27,12 +27,59 @@ public class BuyListDAO {
 	//選択日に使った合計金額を取得するSQL
 	private static final String SELECTAMOUNTBYDAY = "select buydate,sum(price) as buyamount from buylist group by ?;";
 
+	//「項目」と「金額」を変更するSQL
+	private static final String UPDATEITEM = "update buylist set itemnum=?,price=? where id=?";
+
+	//「項目」を削除するSQL
+	private static final String DELETEITEM = "delete from buylist where id=?";
+
     private DataSource source;
 
     public BuyListDAO() {
         source = DaoUtil.getSource();
     }
 
+    public void deleteItem(String id) throws SQLException
+    {
+        //新しく入力された商品にテーブルを更新する
+        Connection con = source.getConnection();
+        PreparedStatement pStmt = null;
+
+        try{
+            pStmt = con.prepareStatement(DELETEITEM);
+            pStmt.setString(1,id);
+            pStmt.executeUpdate();
+
+        }catch(SQLException ex){
+            throw ex;
+
+        }finally{
+            pStmt.close();
+            con.close();
+        }
+    }
+
+    public void updateItem(String id,String inum,String price) throws SQLException
+    {
+        //新しく入力された商品にテーブルを更新する
+        Connection con = source.getConnection();
+        PreparedStatement pStmt = null;
+
+        try{
+            pStmt = con.prepareStatement(UPDATEITEM);
+            pStmt.setString(1,inum);
+            pStmt.setString(2,price);
+            pStmt.setString(3,id);
+            pStmt.executeUpdate();
+
+        }catch(SQLException ex){
+            throw ex;
+
+        }finally{
+            pStmt.close();
+            con.close();
+        }
+    }
 
 
     public int getAmount(String date) throws SQLException

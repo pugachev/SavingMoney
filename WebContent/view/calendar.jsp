@@ -52,6 +52,8 @@
 
 						    //金額をセットする
 						    $('[name="buyamount"]').val($(this).children().eq(2).text());
+						    //IDをセットする
+						    $('#targetid').val($(this).children().eq(0).text());
 							break;
 						}
 					}
@@ -64,6 +66,7 @@
 					var td = $(this)[0];
 					var tr = $(this).closest('tr')[0];
 					var tmparray = $(this).text().split(' ');
+					$('#targetdate').val(tmparray[0]);
 					if(tmparray!=null && tmparray.length>=2){
 						for(var j=1;j<tmparray.length;j++){
 							var innertmp =tmparray[j].split(':');
@@ -120,14 +123,23 @@
 				});
 
 				$("#exampleModal").on("hidden.bs.modal", function(){
+
+					//配列クリア
 					contentsarray=[];
+
 				    // 全ての選択を外す
+
 				    $("#selecteditem option").attr("selected", false);
 				    //選択項目を変更する
 				    $("#selecteditem").val(1);
 
 				    //金額をセットする
 				    $('[name="buyamount"]').val('');
+
+				    //IDをクリアする
+				    $("#targetid").val('');
+				    $("#targetdate").val('');
+
 					console.log('クリアしました');
 				});
 			});
@@ -171,6 +183,7 @@
 						  	<input type="text" id="text1" name="buyamount" class="form-control">
 						</div>
 						<div class="form-group">
+						    <input type="hidden" id="targetid" name="targetid" value="">
 							<input type="hidden" id="targetdate" name="targetdate" value="">
 						</div>
 					</div>

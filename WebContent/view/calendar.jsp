@@ -26,8 +26,6 @@
 		</style>
 		<script>
 		    var tmonth = <%= rcvTargetMonth %>;
-		    var darray = [];
-		    var tarray = [];
 			var contentsarray=[];
 			$(document).ready(function(){
 
@@ -37,18 +35,22 @@
 				  console.log('clickされたー'+thisMonth);
 			  }
 
+			  function detete_func(){
+			        var $fm = $('<form />', {
+			            method: 'POST',
+			            action: '${pageContext.request.contextPath}/SavingMoneyDelete.do'
+			        });
+			        $fm.append($('<input />', {
+			            type: 'hidden',
+			            name: 'dtargetid',
+			            value: $('#targetid').val()
+			        }));
+			        $fm.appendTo(document.body);
+			        $fm.submit();
+			        $fm.remove();
+			  }
+
 			$(window).on('load',function(){
-				$('input[name="deleteItems"]').change(function() {
-					darray = $('input[name="deleteItems"]:checked');
-					if(darray!=null && darray.length>0){
-						tarray = [];
-						for(var i=0;i<darray.length;i++){
-							tarray += darray[i].value + ',';
-						}
-						//ボタンを表示する
-						$('#exampleModal .modal-footer').append('<button type="submit" class="btn btn-primary" >保存する</button>');
-					}
-				});
 				console.log('tmonth=' + tmonth);
 				$(document).on("click", ".targettable tr", function(){
 					var td = $(this)[0];
@@ -67,6 +69,7 @@
 						    $('[name="buyamount"]').val($(this).children().eq(2).text());
 						    //IDをセットする
 						    $('#targetid').val($(this).children().eq(0).text());
+
 							break;
 						}
 					}
@@ -106,7 +109,7 @@
 						    // tr要素を生成
 						    var tr = document.createElement('tr');
 						    // th・td(縦)部分のループ
-						    for (var j = 0; j <4; j++) {
+						    for (var j = 0; j <3; j++) {
 						        // 1行目のtr要素の時
 						        if(i === 0) {
 						            // th要素を生成
@@ -115,21 +118,12 @@
 						            th.textContent = headarray[j];
 						            // th要素をtr要素の子要素に追加
 						            tr.appendChild(th);
-						        } else if(j==0){
-									// 1列目にcheckbokを設定する
-						            // td要素を生成
-									var td = document.createElement('td');
-									// td要素をtr要素の子要素に追加
-									//$(td).outerHTML('<input type="checkbox" name="deleteItems" value="">');
-									//$(td)[0].textContent='<input type="checkbox" name="deleteItems" value="">';
-									$(td).append('<input type="checkbox" name="deleteItems" value="'+contentsarray[i-1][0]+'">')
-									tr.appendChild(td);
 						        }else{
 						            // td要素を生成
 						            var td = document.createElement('td');
 						            // td要素内にテキストを追加
-						            td.textContent = contentsarray[i-1][j-1];
-						            console.log(contentsarray[i-1][j-1]);
+						            td.textContent = contentsarray[i-1][j];
+						            console.log(contentsarray[i-1][j]);
 						            // td要素をtr要素の子要素に追加
 						            tr.appendChild(td);
 								}
@@ -149,11 +143,8 @@
 
 					//配列クリア
 					contentsarray=[];
-					darray=[];
-					tarray=[];
 
 				    // 全ての選択を外す
-
 				    $("#selecteditem option").attr("selected", false);
 				    //選択項目を変更する
 				    $("#selecteditem").val(1);
@@ -214,7 +205,8 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
-						<button type="submit" class="btn btn-primary" >保存する</button>
+						<button type="button" class="btn btn-danger" onclick="detete_func();">削除</button>
+						<button type="submit" class="btn btn-primary" >保存編集</button>
 					</div>
 				</form>
 			</div>

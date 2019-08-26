@@ -26,7 +26,8 @@
 		</style>
 		<script>
 		    var tmonth = <%= rcvTargetMonth %>;
-
+		    var darray = [];
+		    var tarray = [];
 			var contentsarray=[];
 			$(document).ready(function(){
 
@@ -37,6 +38,17 @@
 			  }
 
 			$(window).on('load',function(){
+				$('input[name="deleteItems"]').change(function() {
+					darray = $('input[name="deleteItems"]:checked');
+					if(darray!=null && darray.length>0){
+						tarray = [];
+						for(var i=0;i<darray.length;i++){
+							tarray += darray[i].value + ',';
+						}
+						//ボタンを表示する
+						$('#exampleModal .modal-footer').append('<button type="submit" class="btn btn-primary" >保存する</button>');
+					}
+				});
 				console.log('tmonth=' + tmonth);
 				$(document).on("click", ".targettable tr", function(){
 					var td = $(this)[0];
@@ -110,7 +122,7 @@
 									// td要素をtr要素の子要素に追加
 									//$(td).outerHTML('<input type="checkbox" name="deleteItems" value="">');
 									//$(td)[0].textContent='<input type="checkbox" name="deleteItems" value="">';
-									$(td).append('<input type="checkbox" name="deleteItems" value="">')
+									$(td).append('<input type="checkbox" name="deleteItems" value="'+contentsarray[i-1][0]+'">')
 									tr.appendChild(td);
 						        }else{
 						            // td要素を生成
@@ -137,6 +149,8 @@
 
 					//配列クリア
 					contentsarray=[];
+					darray=[];
+					tarray=[];
 
 				    // 全ての選択を外す
 

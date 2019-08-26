@@ -60,7 +60,7 @@
 					}
 				});
 
-			   	var headarray =['ID','項目','値段'];
+			   	var headarray =['','ID','項目','値段'];
 		   		contentsarray=[];
 			 	$('#mini-calendar').miniCalendar();
 				$('#targetTable td').on('click',function(){
@@ -88,13 +88,13 @@
 					if(tmparray.length>=2){
 					   	// table要素を生成
 						var table = document.createElement('table');
-
+						$('#exampleModal .modal-body table').addClass('table table-bordered table-striped targettable');
 						// tr(横)部分のループ
 						for (var i = 0; i < tmparray.length; i++) {
 						    // tr要素を生成
 						    var tr = document.createElement('tr');
 						    // th・td(縦)部分のループ
-						    for (var j = 0; j < 3; j++) {
+						    for (var j = 0; j <4; j++) {
 						        // 1行目のtr要素の時
 						        if(i === 0) {
 						            // th要素を生成
@@ -103,14 +103,24 @@
 						            th.textContent = headarray[j];
 						            // th要素をtr要素の子要素に追加
 						            tr.appendChild(th);
-						        } else {
+						        } else if(j==0){
+									// 1列目にcheckbokを設定する
+						            // td要素を生成
+									var td = document.createElement('td');
+									// td要素をtr要素の子要素に追加
+									//$(td).outerHTML('<input type="checkbox" name="deleteItems" value="">');
+									//$(td)[0].textContent='<input type="checkbox" name="deleteItems" value="">';
+									$(td).append('<input type="checkbox" name="deleteItems" value="">')
+									tr.appendChild(td);
+						        }else{
 						            // td要素を生成
 						            var td = document.createElement('td');
 						            // td要素内にテキストを追加
-						            td.textContent = contentsarray[i-1][j];
+						            td.textContent = contentsarray[i-1][j-1];
+						            console.log(contentsarray[i-1][j-1]);
 						            // td要素をtr要素の子要素に追加
 						            tr.appendChild(td);
-						        }
+								}
 						    }
 						    // tr要素をtable要素の子要素に追加
 						    table.appendChild(tr);

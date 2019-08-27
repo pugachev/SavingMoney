@@ -192,6 +192,7 @@
 							  <option value="6">税金</option>
 							  <option value="7">日用品</option>
 							  <option value="8">生活費</option>
+							  <option value="9">Amazon</option>
 							</select>
 						</div>
 						<div class="form-group">

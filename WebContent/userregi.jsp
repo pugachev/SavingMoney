@@ -24,13 +24,13 @@
   </head>
 
   <body class="text-center">
-    <form class="form-signin">
+    <form class="form-signin" action="${pageContext.request.contextPath}/UserRegist.do">
       <img class="mb-4" src="${pageContext.request.contextPath}/images/fukurou.jpg" alt="" width="72" height="72">
       <h1 class="h3 mb-3 font-weight-normal">登録画面</h1>
       <label for="inputEmail" class="sr-only">Email address</label>
-      <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+      <input type="email" id="regiEmail" name="regiEmail" class="form-control" placeholder="Email address" required autofocus>
       <label for="inputPassword" class="sr-only">Password</label>
-      <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+      <input type="password" id="inputPassword" name="regiPassword" class="form-control" placeholder="Password" required>
       <button class="btn btn-lg btn-success btn-block" type="submit">新規登録</button>
       <button class="btn btn-lg btn-warning btn-block" onclick="toTop();">キャンセル</button>
       <p class="mt-5 mb-3 text-muted">&copy; 2019-2020</p>

@@ -33,10 +33,66 @@ public class BuyListDAO {
 	//「項目」を削除するSQL
 	private static final String DELETEITEM = "delete from buylist where id=?";
 
+	//「email」からユーザーの存在有無を調べるSQL
+	private static final String ISUSER = "select password from user where mail=?";
+
+	//「email」と「パスワード」を登録するSQL
+	private static final String REGIUSER = "insert into user(mail,password,regidate) values(?,?,?);";
+
     private DataSource source;
 
     public BuyListDAO() {
         source = DaoUtil.getSource();
+    }
+
+    //ユーザーの存在有無を調べる
+    public String isUser(String email) throws SQLException
+    {
+        //userテーブルからパスワードを取得する(あればユーザーは存在する)
+        Connection con = source.getConnection();
+        PreparedStatement pStmt = null;
+        ResultSet rs = null;
+        String ret = "";
+        try{
+            pStmt = con.prepareStatement(ISUSER);
+            pStmt.setString(1,email);
+            rs = pStmt.executeQuery();
+
+            while (rs.next()) {
+                ret=rs.getString("password");
+            }
+        }catch(SQLException ex){
+            throw ex;
+
+        }finally{
+            pStmt.close();
+            con.close();
+        }
+
+        return ret;
+    }
+
+    //ユーザーを登録する
+    public void regiUser(String email,String password,String regidate) throws SQLException
+    {
+        //userテーブルからパスワードを取得する(あればユーザーは存在する)
+        Connection con = source.getConnection();
+        PreparedStatement pStmt = null;
+
+        try{
+            pStmt = con.prepareStatement(REGIUSER);
+            pStmt.setString(1,email);
+            pStmt.setString(2,password);
+            pStmt.setString(3, regidate);
+            pStmt.executeUpdate();
+
+        }catch(SQLException ex){
+            throw ex;
+
+        }finally{
+            pStmt.close();
+            con.close();
+        }
     }
 
     public void deleteItem(String id) throws SQLException

@@ -24,7 +24,7 @@
   </head>
 
   <body class="text-center">
-    <form class="form-signin">
+    <form class="form-signin" action="${pageContext.request.contextPath}/UserLogin.do">
       <img class="mb-4" src="${pageContext.request.contextPath}/images/fukurou.jpg" alt="" width="72" height="72">
       <h1 class="h3 mb-3 font-weight-normal">ログイン画面</h1>
       <label for="inputEmail" class="sr-only">Email address</label>

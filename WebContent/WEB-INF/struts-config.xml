@@ -24,6 +24,15 @@
     <action name="SavingMoneyRegistForm" type="action.SavingMoneyDeleteAction" path="/SavingMoneyDelete">
       <forward name="success" path="/SavingMoneyList.do"/>
     </action>
+
+    <action name="SavingMoneyRegistForm" type="action.UserLoginAction" path="/UserLogin">
+      <forward name="success" path="/SavingMoneyList.do"/>
+      <forward name="failure" path="/index.jsp"/>
+    </action>
+
+    <action name="SavingMoneyRegistForm" type="action.UserRegistAction" path="/UserRegist">
+      <forward name="success" path="/index.jsp"/>
+    </action>
   </action-mappings>
 
   <message-resources parameter="ApplicationResource" />

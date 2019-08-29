@@ -34,10 +34,10 @@ public class BuyListDAO {
 	private static final String DELETEITEM = "delete from buylist where id=?";
 
 	//「email」からユーザーの存在有無を調べるSQL
-	private static final String ISUSER = "select password from user where mail=?";
+	private static final String ISUSER = "select password from loginUser where mail=?";
 
 	//「email」と「パスワード」を登録するSQL
-	private static final String REGIUSER = "insert into user(mail,password,regidate) values(?,?,?);";
+	private static final String REGIUSER = "insert into loginUser(mail,password,regidate) values(?,?,?);";
 
     private DataSource source;
 

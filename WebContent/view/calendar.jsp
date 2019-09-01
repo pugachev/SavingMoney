@@ -5,10 +5,29 @@
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
 <%@page import="model.Product" %>
 <%@page import="java.util.*" %>
+<%@ include file="/view/login.jsp" %>
+<%@page import="util.ReadProperties" %>
 <%
 	String rcvTargetMonth = (String)session.getAttribute("targetMonth");
-	System.out.println("rcvTargetMonth="+rcvTargetMonth);
+	boolean isLogIn=false;
+	boolean isLogOut=false;
+	String fileName="/view/";
+	boolean isfile = ReadProperties.isPropertiesFile();
+	if(isfile){
+		if(ReadProperties.getProperty("addLogInButton").equals("true")){
+			isLogIn=true;
+		}
+		if(ReadProperties.getProperty("addLogoutButton").equals("true")){
+			isLogOut=true;
+		}
+	}
 %>
+<% if(isLogIn){ %>
+<%@ include file="/view/login.jsp" %>
+<% } %>
+<% if(isLogOut){ %>
+<%@ include file="/view/logout.jsp" %>
+<% } %>
 <!DOCTYPE html>
 <html class="no-js">
 	<head>
@@ -162,8 +181,30 @@
 		</script>
 	</head>
 	<body>
-		<div id="wrap">
-			<div id="mini-calendar"></div>
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+		    <span class="navbar-toggler-icon"></span>
+		  </button>
+		  <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+		    <a class="navbar-brand" href="#">節約カレンダー</a>
+		    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+		    <% if(isLogIn){ %>
+		      <li class="nav-item active">
+		        <a class="btn btn-primary" style="margin:3px;" href="#" onclick="login();">ログイン <span class="sr-only">(current)</span></a>
+		      </li>
+		    <% } %>
+		    <% if(isLogOut){ %>
+		      <li class="nav-item active">
+		        <a class="btn btn-danger" style="margin:3px;" href="#" onclick="logout();">ログアウト <span class="sr-only">(current)</span></a>
+		      </li>
+		    <% } %>
+		    </ul>
+		  </div>
+		</nav>
+	    <div class="container-fluid">
+			<div id="wrap">
+				<div id="mini-calendar"></div>
+			</div>
 		</div>
 	</body>
 </html>

@@ -38,6 +38,10 @@ public class UserRegistAction extends DispatchAction {
             BuyListDAO dao = new BuyListDAO();
             dao.regiUser(rcvmail, rcvpassword,setDate);
     	}
+    	else
+    	{
+    		return mapping.findForward("failure");
+    	}
 
         return mapping.findForward("success");
     }

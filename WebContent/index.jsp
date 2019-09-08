@@ -17,8 +17,12 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/signin.css">
 	<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 	<script>
+		$(document).ready(function(){
+			$('#inputEmail').val('');
+			$('#inputPassword').val('');
+		});
 		function toRegi(){
-			document.location.href = "./userregi.jsp";
+			document.location.href = "userregi.jsp";
 		}
 	</script>
   </head>
@@ -31,8 +35,8 @@
       <input type="email" id="inputEmail" name="regiEmail" class="form-control" placeholder="Email address" required autofocus>
       <label for="inputPassword" class="sr-only">Password</label>
       <input type="password" id="inputPassword" name="regiPassword" class="form-control" placeholder="Password" required>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">ログイン</button>
-      <button class="btn btn-lg btn-warning btn-block" onclick="toRegi();">新規登録</button>
+      <button class="btn btn-lg btn-primary btn-block" id="loginbtn" type="submit">ログイン</button>
+      <button class="btn btn-lg btn-warning btn-block" id="regbtn" onclick="toRegi();">新規登録</button>
       <p class="mt-5 mb-3 text-muted">&copy; 2019-2020</p>
     </form>
   </body>

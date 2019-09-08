@@ -8,6 +8,10 @@
 <%@ include file="/view/login.jsp" %>
 <%@page import="util.ReadProperties" %>
 <%
+	//LoginActionからもらうデータ
+	String rcvID = (String)session.getAttribute("rcvmail");
+	String rcvPW = (String)session.getAttribute("rcvpassword");
+
 	String rcvTargetMonth = (String)session.getAttribute("targetMonth");
 	boolean isLogIn=false;
 	boolean isLogOut=false;
@@ -22,6 +26,7 @@
 		}
 	}
 %>
+<%@ include file="/view/UserStatusCheck.jsp" %>
 <% if(isLogIn){ %>
 <%@ include file="/view/login.jsp" %>
 <% } %>
@@ -181,6 +186,11 @@
 		</script>
 	</head>
 	<body>
+		<form action="${pageContext.request.contextPath}/UserLogout.do">
+			<input type="hidden" id="hiddenID" name="hiddenID" value="<%= rcvID %>"/>
+			<input type="hidden" id="hiddenPW" name="hiddenID" value="<%= rcvPW %>"/>
+			<input type="submit" id="logoutbtn" style="display:none"/>
+		</form>
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
 		    <span class="navbar-toggler-icon"></span>

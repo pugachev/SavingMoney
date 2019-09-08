@@ -30,8 +30,13 @@
       <forward name="failure" path="/index.jsp"/>
     </action>
 
+    <action name="SavingMoneyRegistForm" type="action.UserLogoutAction" path="/UserLogout">
+      <forward name="success" path="/index.jsp"/>
+    </action>
+
     <action name="SavingMoneyRegistForm" type="action.UserRegistAction" path="/UserRegist">
       <forward name="success" path="/index.jsp"/>
+      <forward name="failure" path="/index.jsp"/>
     </action>
   </action-mappings>
 

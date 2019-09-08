@@ -22,7 +22,8 @@ import net.sf.json.JSONObject;
 
 public class SavingMoneyListAction extends Action {
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest req,HttpServletResponse res) throws Exception {
-
+    	String loginStatus = (String)req.getSession(true).getAttribute("loginStatus");
+    	System.out.println("SavingMoneyListAction loginStatus=" + loginStatus);
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     	//データ取得処理
     	if(req.getParameter("tmonth")!=null)

@@ -8,5 +8,6 @@
 <script>
 	function logout(){
 		console.log('ログアウトボタン押下');
+		$('#logoutbtn').click();
 	}
 </script>

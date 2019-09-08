@@ -15,21 +15,45 @@ import dao.BuyListDAO;
 public class UserLoginAction extends DispatchAction {
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest req,HttpServletResponse res) throws Exception {
 
+    	//セッション処理を開始
+    	//1.セッションを生成
+//		HttpSession session = req.getSession();
+		res.setContentType("text/html; charset=UTF-8");
+		req.setCharacterEncoding("UTF-8");
+
+		//2.セッションにログイン状態をセット(初期値はNG)
+		req.getSession(true).setAttribute("loginStatus", "NG");
+
+		//3.パラメータの取得
     	String rcvmail = (String)req.getParameter("regiEmail");
     	String rcvpassword = req.getParameter("regiPassword");
 
-    	//ユーザーの存在有無をパスワードとの一致でみる
+    	//4.ユーザーの存在有無をパスワードとの一致でみる
     	if((rcvmail!=null && !rcvmail.equals(""))&&(rcvpassword!=null && !rcvpassword.equals("")))
     	{
-			//DBへupdate
+			//4-1.DBへパスワードの問い合わせ
             BuyListDAO dao = new BuyListDAO();
             String retPassword = dao.isUser(rcvmail);
-            if(!retPassword.equals(rcvpassword)) {
+            //4-1-1.パスワード不一致の場合
+            if(!retPassword.equals(rcvpassword))
+            {
+            	req.getSession(true).setAttribute("loginStatus", "NG");
             	return mapping.findForward("failure");
             }
+            //4-1-２.パスワード一致の場合
+            else
+            {
+            	req.getSession(true).setAttribute("loginStatus", "OK");
+            	req.getSession(true).setAttribute("rcvmail", rcvmail);
+            	req.getSession(true).setAttribute("rcvpassword", rcvpassword);
+            	return mapping.findForward("success");
+            }
     	}
-
-        return mapping.findForward("success");
+    	//IDとPWが揃ってこなかった場合
+    	else
+    	{
+    		req.getSession(true).setAttribute("loginStatus", "NG");
+        	return mapping.findForward("failure");
+    	}
     }
-
 }

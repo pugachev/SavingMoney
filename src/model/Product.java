@@ -5,9 +5,16 @@ import java.util.HashMap;
 public class Product {
     private int id;
     private int itemnum;
+    private String userid;
     private String title;
     public String getTitle() {
 		return title;
+	}
+	public String getUserid() {
+		return userid;
+	}
+	public void setUserid(String userid) {
+		this.userid = userid;
 	}
 	public void setTitle(String title) {
 		this.title = title;

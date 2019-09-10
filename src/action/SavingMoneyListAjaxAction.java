@@ -23,7 +23,7 @@ import net.sf.json.JSONObject;
 
 public class SavingMoneyListAjaxAction extends Action {
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest req,HttpServletResponse res) throws Exception {
-
+    	String userid = (String)req.getSession(true).getAttribute("rcvmail");
     	int targetMonth=0;
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     	if(req.getParameter("tmonth")!=null)
@@ -47,7 +47,7 @@ public class SavingMoneyListAjaxAction extends Action {
     	String targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,targetMonthLastDay);
 
         BuyListDAO dao = new BuyListDAO();
-        List<Product> rcv = dao.getShoppingList(targetStart,targetEnd);
+        List<Product> rcv = dao.getShoppingList(userid,targetStart,targetEnd);
 
 
     	JSONObject obj = new JSONObject();

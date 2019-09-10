@@ -32,8 +32,8 @@
       <label for="inputPassword" class="sr-only">Password</label>
       <input type="password" id="inputPassword" name="regiPassword" class="form-control" placeholder="Password" required>
       <button class="btn btn-lg btn-success btn-block" type="submit">新規登録</button>
-      <button class="btn btn-lg btn-warning btn-block" onclick="toTop();">キャンセル</button>
-      <p class="mt-5 mb-3 text-muted">&copy; 2019-2020</p>
+      <a class="btn btn-lg btn-warning btn-block" id="regbtn" href="#" role="button" onclick="toTop();">キャンセル</a>
+      <p class="text-muted">&copy; 2019-2020</p>
     </form>
   </body>
 </html>

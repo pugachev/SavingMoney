@@ -19,6 +19,8 @@ import model.Product;
 public class SavingMoneyRegistAction extends DispatchAction {
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest req,HttpServletResponse res) throws Exception {
 
+    	String userid = (String)req.getSession(true).getAttribute("rcvmail");
+
     	String rcvTargetId = (String)req.getParameter("targetid");
     	String rcvTargetDate = req.getParameter("targetdate");
     	int rcvItemNum = Integer.parseInt(req.getParameter("selecteditem"));
@@ -50,6 +52,7 @@ public class SavingMoneyRegistAction extends DispatchAction {
         	Product tmp = new Product();
         	tmp.setItemnum(rcvItemNum);
         	tmp.setPrice(rcvPrice);
+        	tmp.setUserid(userid);
         	tmp.setBuydate(setDate);
 
             BuyListDAO dao = new BuyListDAO();

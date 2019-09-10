@@ -23,7 +23,8 @@ import net.sf.json.JSONObject;
 public class SavingMoneyListAction extends Action {
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest req,HttpServletResponse res) throws Exception {
     	String loginStatus = (String)req.getSession(true).getAttribute("loginStatus");
-    	System.out.println("SavingMoneyListAction loginStatus=" + loginStatus);
+    	
+    	String userid = (String)req.getSession(true).getAttribute("rcvmail");
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     	//データ取得処理
     	if(req.getParameter("tmonth")!=null)
@@ -41,7 +42,7 @@ public class SavingMoneyListAction extends Action {
         	System.out.println(targetStart+" " + targetEnd);
 
             BuyListDAO dao = new BuyListDAO();
-            List<Product> rcv = dao.getShoppingList(targetStart,targetEnd);
+            List<Product> rcv = dao.getShoppingList(userid,targetStart,targetEnd);
 
         	JSONObject obj = new JSONObject();
         	obj.put("year", LocalDate.now().getYear());
@@ -78,7 +79,7 @@ public class SavingMoneyListAction extends Action {
         	String targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,targetMonthLastDay);
 
             BuyListDAO dao = new BuyListDAO();
-            List<Product> rcv = dao.getShoppingList(targetStart,targetEnd);
+            List<Product> rcv = dao.getShoppingList(userid,targetStart,targetEnd);
 
         	JSONObject obj = new JSONObject();
         	obj.put("year", LocalDate.now().getYear());

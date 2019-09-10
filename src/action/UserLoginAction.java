@@ -17,7 +17,6 @@ public class UserLoginAction extends DispatchAction {
 
     	//セッション処理を開始
     	//1.セッションを生成
-//		HttpSession session = req.getSession();
 		res.setContentType("text/html; charset=UTF-8");
 		req.setCharacterEncoding("UTF-8");
 
@@ -46,6 +45,7 @@ public class UserLoginAction extends DispatchAction {
             	req.getSession(true).setAttribute("loginStatus", "OK");
             	req.getSession(true).setAttribute("rcvmail", rcvmail);
             	req.getSession(true).setAttribute("rcvpassword", rcvpassword);
+            	System.out.println("rcvmail=" + rcvmail);
             	return mapping.findForward("success");
             }
     	}

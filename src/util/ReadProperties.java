@@ -29,7 +29,6 @@ public class ReadProperties {
 		}
 		catch(IOException iex)
 		{
-			System.out.println(iex.toString());
 			return ret;
 		}
 

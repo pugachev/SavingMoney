@@ -12,7 +12,6 @@
 	if(loginStatus==null || (loginStatus!=null && !loginStatus.equals("OK")))
 	{
 		isStatus="'NG'";
-		System.out.println("isStatus=" + isStatus);
 	}
 %>
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>

@@ -23,7 +23,6 @@ public class SavingMoneyDeleteAction extends DispatchAction {
 			//DBへdelete(論理削除か物理削除かは未定)
             BuyListDAO dao = new BuyListDAO();
             dao.deleteItem(rcvdTargetId);
-            System.out.println("(削除) rcvdTargetId="+rcvdTargetId);
     	}
         return mapping.findForward("success");
     }

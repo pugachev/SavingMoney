@@ -11,6 +11,7 @@
 	//LoginActionからもらうデータ
 	String rcvID = (String)session.getAttribute("rcvmail");
 	String rcvPW = (String)session.getAttribute("rcvpassword");
+	//String rcvTargetMonth =  (String)session.getAttribute("month");
 
 	String rcvTargetMonth = (String)session.getAttribute("targetMonth");
 	boolean isLogIn=false;
@@ -229,6 +230,7 @@
 				</button>
 			</div>
 				<form action="${pageContext.request.contextPath}/SavingMoneyRegist.do" method="post">
+
 					<div class="modal-body">
 						<div class="form-group targetTable">
 						</div>
@@ -252,6 +254,7 @@
 						</div>
 						<div class="form-group">
 						    <input type="hidden" id="targetid" name="targetid" value="">
+						    <input type="hidden" name="targetmonth" value="<%= rcvTargetMonth %>">
 							<input type="hidden" id="targetdate" name="targetdate" value="">
 						</div>
 					</div>

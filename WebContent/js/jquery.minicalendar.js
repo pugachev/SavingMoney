@@ -12,7 +12,6 @@
 var targetmonth='';
 
 $(document).ready(function(){
-	console.log('★★★ tmonth='+tmonth);
 	 $.wop = $.wop || {};
 	  $.wop.miniCalendar = function(targets,option){
 	    this.opts = $.extend({},$.wop.miniCalendar.defaults,option);
@@ -74,8 +73,8 @@ $(document).ready(function(){
 	     */
 	    printType : function(thisYear, thisMonth) {
 	      $(this.ele).find('.calendar-year-month').text(thisYear + '年' + thisMonth+ '月');
-	      $('.calendar-year-month').prepend('<a href="/savingmoney/SavingMoneyList.do?tmonth='+(thisMonth-1)+'" class="arrow_left" > ◀ </a>');
-	      $('.calendar-year-month').append('<a href="/savingmoney/SavingMoneyList.do?tmonth='+(thisMonth+1)+'" class="arrow_left" > ▶ </a>');
+	      $('.calendar-year-month').prepend('<a href="/savingmoney/SavingMoneyList.do?targetmonth='+(thisMonth-1)+'" class="arrow_left" > ◀ </a>');
+	      $('.calendar-year-month').append('<a href="/savingmoney/SavingMoneyList.do?targetmonth='+(thisMonth+1)+'" class="arrow_left" > ▶ </a>');
 //	      $('.calendar-year-month').prepend('<a href="#" class="arrow_left" onclick="changePreMonth();"> ◀ </a>');
 //	      $('.calendar-year-month').append('<a href="#" class="arrow_left" onclick="changeMextMonth();"> ▶ </a>');
 
@@ -172,7 +171,7 @@ $(document).ready(function(){
 	    	      xhr.overrideMimeType('text/html;charset=UTF-8');
 	    	},
 	        type: "GET",
-	        url:  'SavingMoneyListAjax.do?tmonth='+(targetmonth),
+	        url:  'SavingMoneyListAjax.do?targetmonth='+(targetmonth),
 	        dataType: "json",
 	        async: false,
 	        success: function(data){

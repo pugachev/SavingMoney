@@ -26,18 +26,19 @@ public class SavingMoneyListAjaxAction extends Action {
     	String userid = (String)req.getSession(true).getAttribute("rcvmail");
     	int targetMonth=0;
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    	if(req.getParameter("tmonth")!=null)
+    	if(req.getParameter("targetmonth")!=null)
     	{
-			System.out.println("SavingMoneyListAjaxAction tmonth(1)="+req.getParameter("tmonth"));
         	//画面からポストしてくる対象月
-        	targetMonth =  Integer.parseInt(req.getParameter("tmonth"));
+        	targetMonth =  Integer.parseInt(req.getParameter("targetmonth"));
+        	System.out.println("targetMonth=" + targetMonth);
     	}
     	else
     	{
-    		System.out.println("SavingMoneyListAjaxAction tmonth(2)="+req.getParameter("tmonth"));
         	//システムから取得した対象月
         	targetMonth =  LocalDate.now().getMonthValue();
     	}
+    	req.getSession(true).setAttribute("month", targetMonth);
+
 
     	//対象月の末尾
     	int targetMonthLastDay = YearMonth.of(LocalDate.now().getYear(), 7).lengthOfMonth();
@@ -59,7 +60,9 @@ public class SavingMoneyListAjaxAction extends Action {
         	JSONObject obj2 = new JSONObject();
         	//対象日をセット
         	String tday[] = rcv.get(i).getBuydate().split("-");
-        	obj2.put("day", tday[2]);
+        	int numday = Integer.parseInt( tday[2]);
+//        	System.out.println(tday[2]+" "+numday);
+        	obj2.put("day", String.valueOf(numday));
         	//titleをセット
         	obj2.put("title",rcv.get(i).getTitle());
         	//金額をセット
@@ -70,8 +73,6 @@ public class SavingMoneyListAjaxAction extends Action {
         }
 
         obj.put("event", jsonArray);
-
-        System.out.println("ajaxデータ " + obj.toString());
 
         req.getSession(true).setAttribute("targetMonth", String.valueOf(targetMonth));
 

@@ -21,6 +21,10 @@ public class SavingMoneyRegistAction extends DispatchAction {
 
     	String userid = (String)req.getSession(true).getAttribute("rcvmail");
 
+    	String rcvMonth = (String)req.getParameter("thisMonth");
+    	if(rcvMonth==null || (rcvMonth!=null && rcvMonth.equals(""))) {
+    		rcvMonth = (String)req.getParameter("targetmonth");
+    	}
     	String rcvTargetId = (String)req.getParameter("targetid");
     	String rcvTargetDate = req.getParameter("targetdate");
     	int rcvItemNum = Integer.parseInt(req.getParameter("selecteditem"));
@@ -30,7 +34,9 @@ public class SavingMoneyRegistAction extends DispatchAction {
     	//フォーマット
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     	//システムから取得した月
-    	int targetMonth =  LocalDate.now().getMonthValue();
+//    	int targetMonth =  LocalDate.now().getMonthValue();
+    	int targetMonth = Integer.parseInt(rcvMonth);
+    	System.out.println("rcvMonth=" + rcvMonth + " targetMonth=" + targetMonth);
 
     	String setDate = String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,Integer.parseInt(rcvTargetDate));
 
@@ -43,7 +49,6 @@ public class SavingMoneyRegistAction extends DispatchAction {
     			//DBへupdate
                 BuyListDAO dao = new BuyListDAO();
                 dao.updateItem(rcvTargetId, String.valueOf(rcvItemNum), String.valueOf(rcvPrice));
-                System.out.println("(変更) rcvTargetId="+rcvTargetId + " rcvItemNum=" + rcvItemNum + " rcvPrice=" + rcvPrice);
     		}
     	}
     	//「新規作成」の場合
@@ -57,8 +62,6 @@ public class SavingMoneyRegistAction extends DispatchAction {
 
             BuyListDAO dao = new BuyListDAO();
             dao.entry(tmp);
-
-            System.out.println("(新規作成) rcvTargetDate="+rcvTargetDate+" rcvItemNum=" + rcvItemNum + " rcvPrice=" + rcvPrice + " setDate=" + setDate);
     	}
 
 

@@ -217,6 +217,7 @@ public class BuyListDAO {
         {
             con = source.getConnection();
             String sqltmp = "select buylist.id as id,buylist.price as price,buylist.buydate as buydate,buylist.regidate as regidate,itemlist.title as title from buylist  left join itemlist on buylist.itemnum = itemlist.itemnum where userid='"+userid+"' and buydate " +" between '"+ date+ "' and '" + date2 +"'" + " order by  buydate asc";
+            System.out.println("sqltmp " + sqltmp);
             pStmt = con.prepareStatement(sqltmp);
             rs = pStmt.executeQuery();
 
@@ -244,7 +245,6 @@ public class BuyListDAO {
         PreparedStatement pStmt = null;
         ResultSet rs = null;
 
-        System.out.println("userid=" + userid);
         try {
 
             con = source.getConnection();

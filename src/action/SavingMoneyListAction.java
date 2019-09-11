@@ -26,6 +26,15 @@ public class SavingMoneyListAction extends Action {
 
     	String userid = (String)req.getSession(true).getAttribute("rcvmail");
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    	String rcvMonth = (String)req.getParameter("thisMonth");
+    	if(rcvMonth==null || (rcvMonth!=null && rcvMonth.equals(""))) {
+    		rcvMonth = (String)req.getParameter("targetmonth");
+    	}
+    	if((String)req.getSession(true).getAttribute("deleteMonth")!=null)
+    	{
+    		rcvMonth = (String)req.getSession(true).getAttribute("deleteMonth");
+    		req.getSession(true).setAttribute("deleteMonth", "");
+    	}
     	//データ取得処理
     	if(req.getParameter("targetmonth")!=null)
     	{
@@ -68,11 +77,25 @@ public class SavingMoneyListAction extends Action {
             req.getSession(true).setAttribute("buydata", obj.toString());
             req.getSession(true).setAttribute("targetMonth", String.valueOf(targetMonth));
     	}
+
     	else
     	{
-        	//システムから取得した対象月
-        	int targetMonth =  LocalDate.now().getMonthValue();
-//        	対象月の末尾
+    		int targetMonth =0;
+    		if(rcvMonth!=null && !rcvMonth.equals(""))
+    		{
+            	//セッションから取得した対象月
+            	targetMonth = Integer.parseInt(rcvMonth);
+            	System.out.println("SavingMoneyList セッションから取得した対象月 " + targetMonth);
+    		}
+    		else
+    		{
+            	//システムから取得した対象月
+            	targetMonth =  LocalDate.now().getMonthValue();
+            	System.out.println("SavingMoneyList システムから取得した対象月 " + targetMonth);
+    		}
+
+
+    		//対象月の末尾
         	int targetMonthLastDay = YearMonth.of(LocalDate.now().getYear(), 7).lengthOfMonth();
         	//対象月の開始日
         	String targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,1);

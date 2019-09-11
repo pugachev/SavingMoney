@@ -70,6 +70,11 @@
 			            name: 'dtargetid',
 			            value: $('#targetid').val()
 			        }));
+			        $fm.append($('<input />', {
+			            type: 'hidden',
+			            name: 'dtargemonth',
+			            value: $('#targetmonth').val()
+			        }));
 			        $fm.appendTo(document.body);
 			        $fm.submit();
 			        $fm.remove();
@@ -254,7 +259,7 @@
 						</div>
 						<div class="form-group">
 						    <input type="hidden" id="targetid" name="targetid" value="">
-						    <input type="hidden" name="targetmonth" value="<%= rcvTargetMonth %>">
+						    <input type="hidden" id="targetmonth" name="targetmonth" value="<%= rcvTargetMonth %>">
 							<input type="hidden" id="targetdate" name="targetdate" value="">
 						</div>
 					</div>

@@ -36,7 +36,6 @@ public class ReadProperties {
 	}
 
 	public static String getProperty(String key){
-		System.out.println(" >>> getProperty= "+inst.prop.getProperty(key));
 		return inst.prop.getProperty(key);
 	}
 

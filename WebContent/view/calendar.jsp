@@ -56,11 +56,24 @@
 
 			});
 
+			function save_func(){
+				if($('#text1').val()==''){
+					alert('金額を入力してください');
+					return false;
+				}
+				
+				document.myform.submit();
+			}
+
 			  function changeMonth(thisMonth){
 				  console.log('clickされたー'+thisMonth);
 			  }
 
 			  function detete_func(){
+				  	if($('#text1').val()==''){
+						alert('金額を入力してください');
+						return false;
+					}
 			        var $fm = $('<form />', {
 			            method: 'POST',
 			            action: '${pageContext.request.contextPath}/SavingMoneyDelete.do'
@@ -234,7 +247,7 @@
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-				<form action="${pageContext.request.contextPath}/SavingMoneyRegist.do" method="post">
+				<form id="regform" name="myform" action="${pageContext.request.contextPath}/SavingMoneyRegist.do" method="post">
 
 					<div class="modal-body">
 						<div class="form-group targetTable">
@@ -266,7 +279,7 @@
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
 						<button type="button" class="btn btn-danger" onclick="detete_func();">削除</button>
-						<button type="submit" class="btn btn-primary" >保存編集</button>
+						<button type="button" class="btn btn-primary" id="save_update" onclick="save_func();">保存編集</button>
 					</div>
 				</form>
 			</div>

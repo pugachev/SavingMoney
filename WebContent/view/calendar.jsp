@@ -9,7 +9,7 @@
 <%@page import="util.ReadProperties" %>
 <%
 	//LoginActionからもらうデータ
-	String rcvID = (String)session.getAttribute("rcvmail");
+	String rcvID = "'"+(String)session.getAttribute("rcvmail")+"'";
 	String rcvPW = (String)session.getAttribute("rcvpassword");
 	//String rcvTargetMonth =  (String)session.getAttribute("month");
 
@@ -51,6 +51,7 @@
 		</style>
 		<script>
 		    var tmonth = <%= rcvTargetMonth %>;
+		    var rcvid = <%= rcvID %>;
 			var contentsarray=[];
 			$(document).ready(function(){
 
@@ -61,12 +62,32 @@
 					alert('金額を入力してください');
 					return false;
 				}
-				
+
 				document.myform.submit();
 			}
 
 			  function changeMonth(thisMonth){
 				  console.log('clickされたー'+thisMonth);
+			  }
+
+			  function detail_func(){
+			        var $fm = $('<form />', {
+			            method: 'POST',
+			            action: '${pageContext.request.contextPath}/SavingMoneyDetail.do'
+			        });
+			        $fm.append($('<input />', {
+			            type: 'hidden',
+			            name: 'dtargetid',
+			            value: rcvid
+			        }));
+			        $fm.append($('<input />', {
+			            type: 'hidden',
+			            name: 'dtargemonth',
+			            value: tmonth
+			        }));
+			        $fm.appendTo(document.body);
+			        $fm.submit();
+			        $fm.remove();
 			  }
 
 			  function detete_func(){
@@ -228,6 +249,11 @@
 		      </li>
 		    <% } %>
 		    </ul>
+		    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+		      <li class="nav-item active">
+		        <a class="btn btn-primary" style="margin:3px;" href="#" onclick="detail_func();">詳細画面 <span class="sr-only">(current)</span></a>
+		      </li>
+		    </ul>
 		  </div>
 		</nav>
 	    <div class="container-fluid">
@@ -278,8 +304,8 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
-						<button type="button" class="btn btn-danger" onclick="detete_func();">削除</button>
-						<button type="button" class="btn btn-primary" id="save_update" onclick="save_func();">保存編集</button>
+<!-- 						<button type="button" class="btn btn-danger" onclick="detete_func();">削除</button> -->
+						<button type="button" class="btn btn-primary" id="save_update" onclick="save_func();">保存</button>
 					</div>
 				</form>
 			</div>

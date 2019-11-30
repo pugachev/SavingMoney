@@ -1,7 +1,6 @@
 
 package action;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
@@ -20,22 +19,15 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 
-public class SavingMoneyListAction extends Action {
+public class SavingMoneyDetailAction extends Action {
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest req,HttpServletResponse res) throws Exception {
     	String loginStatus = (String)req.getSession(true).getAttribute("loginStatus");
-
-    	String userid = (String)req.getSession(true).getAttribute("rcvmail");
-    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    	String rcvMonth = (String)req.getParameter("thisMonth");
+    	String userid = (String)req.getParameter("dtargetid");
+    	String rcvMonth = (String)req.getParameter("dtargemonth");
+    	System.out.println("★SavingMoneyDetailAction userid="+ userid+" rcvMonth="+rcvMonth);
     	if(rcvMonth==null || (rcvMonth!=null && rcvMonth.equals(""))) {
     		rcvMonth = (String)req.getParameter("targetmonth");
     	}
-    	if((String)req.getSession(true).getAttribute("deleteMonth")!=null)
-    	{
-    		rcvMonth = (String)req.getSession(true).getAttribute("deleteMonth");
-    		req.getSession(true).setAttribute("deleteMonth", "");
-    	}
-    	System.out.println("★★★ loginStatus="+loginStatus+" userid="+userid+" rcvMonth="+rcvMonth);
     	//データ取得処理
     	if(req.getParameter("targetmonth")!=null)
     	{
@@ -76,8 +68,8 @@ public class SavingMoneyListAction extends Action {
 
             obj.put("event", jsonArray);
             req.getSession(true).setAttribute("buydata", obj.toString());
+            req.getSession(true).setAttribute("userid", userid);
             req.getSession(true).setAttribute("targetMonth", String.valueOf(targetMonth));
-            System.out.println("こちらを通りました targetMonth=" + targetMonth);
     	}
 
     	else
@@ -130,6 +122,7 @@ public class SavingMoneyListAction extends Action {
 
             obj.put("event", jsonArray);
             req.getSession(true).setAttribute("buydata", obj.toString());
+            req.getSession(true).setAttribute("userid", userid);
             req.getSession(true).setAttribute("targetMonth", String.valueOf(targetMonth));
     	}
 

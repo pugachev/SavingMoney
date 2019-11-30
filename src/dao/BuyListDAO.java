@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import model.DailySum;
 import model.Product;
 
 public class BuyListDAO {
@@ -38,6 +39,9 @@ public class BuyListDAO {
 
 	//「email」と「パスワード」を登録するSQL
 	private static final String REGIUSER = "insert into loginUser(mail,password,regidate) values(?,?,?);";
+
+	//「userid」毎に「日付」で合計した購入金額をだす
+	private static final String SUMPRICE = "SELECT sum(price) as sumprice,buydate FROM struts.buylist where userid= ? group by buydate;";
 
     private DataSource source;
 
@@ -270,6 +274,31 @@ public class BuyListDAO {
         return list;
     }
 
+    //対象月のリストを作る
+    public List<DailySum> getDailySumList(String userid) throws SQLException {
+        List<DailySum> list = new ArrayList<DailySum>();
+        Connection con = null;
+        PreparedStatement pStmt = null;
+        ResultSet rs = null;
+
+        try{
+            pStmt = con.prepareStatement(REGIUSER);
+            pStmt.setString(1,userid);
+
+            pStmt.executeUpdate();
+
+        }catch(SQLException ex){
+            throw ex;
+
+        }finally{
+            pStmt.close();
+            con.close();
+        }
+
+        return list;
+    }
+
+
     public void entry(Product pro) throws SQLException {
         //新しく入力された商品にテーブルを追加する
         Connection con = source.getConnection();
@@ -303,13 +332,18 @@ public class BuyListDAO {
 
     private Product getProduct(ResultSet rs) throws SQLException {
         Product pro = new Product();
-
         pro.setId(rs.getInt("id"));
-//        pro.setItemnum(rs.getInt("itemnum"));
         pro.setPrice(rs.getInt("price"));
         pro.setTitle(rs.getString("title"));
         pro.setBuydate(rs.getString("buydate"));
         return pro;
+    }
+    private DailySum getDailySum(ResultSet rs) throws SQLException {
+    	DailySum dsum = new DailySum();
+    	dsum.setId(rs.getInt("id"));
+    	dsum.setDailysum(rs.getInt("sumprice"));
+    	dsum.setBuydate(rs.getString("buydate"));
+        return dsum;
     }
     private Date nowDate() {
         Calendar cal = Calendar.getInstance();

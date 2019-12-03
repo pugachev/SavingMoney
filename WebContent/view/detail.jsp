@@ -5,11 +5,39 @@
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
 <%@page import="model.Product" %>
 <%@page import="java.util.*" %>
+<%@page import="com.fasterxml.jackson.databind.JsonNode" %>
+<%@page import="com.fasterxml.jackson.databind.ObjectMapper" %>
+<%@page import="com.fasterxml.jackson.core.type.TypeReference" %>
+<%@page import="java.text.NumberFormat" %>
+<%!
+Product[] itemList=null;
+%>
 <%
 	//LoginActionからもらうデータ
 	String rcvID = "'"+(String)session.getAttribute("userid")+"'";
 	String rcvTargetMonth = (String)session.getAttribute("targetMonth");
-	System.out.println("★ detail.jsp rcvID=" + rcvID + " rcvTargetMonth=" + rcvTargetMonth);
+
+	String rcvJsonData = (String)session.getAttribute("buydata");
+	int totaldatacnt= Integer.parseInt((String)session.getAttribute("totalDataCnt"));
+	NumberFormat nfCur = NumberFormat.getCurrencyInstance();
+	int totaldetailsum= Integer.parseInt((String)session.getAttribute("totaldetailsum"));
+	if(rcvJsonData!=null){
+        ObjectMapper mapper = new ObjectMapper();
+
+        // JSON文字列を読み込み、JsonNodeオブジェクトに変換（Fileやbyte[]も引数に取れる）
+        JsonNode root = mapper.readTree(rcvJsonData);
+        itemList = new ObjectMapper().readValue(rcvJsonData, Product[].class);
+
+	}
+	int pagecnt = 0;
+	if(totaldatacnt%10==0)
+	{
+		pagecnt = totaldatacnt/10;
+	}
+	else
+	{
+		pagecnt = (totaldatacnt/10)+1;
+	}
 %>
 <!DOCTYPE html>
 <html>
@@ -30,6 +58,7 @@
 <script>
 var userid='';
 var targetmonth='';
+var offset='';
 $(document).ready(function()
 
 	    {
@@ -39,7 +68,7 @@ $(document).ready(function()
 	        $("#myTable").tablesorter();
 	    }
 	);
-function calender_func(){
+function calender_func(offset){
     var $fm = $('<form />', {
         method: 'POST',
         action: '${pageContext.request.contextPath}/SavingMoneyList.do'
@@ -52,15 +81,43 @@ function calender_func(){
     $fm.append($('<input />', {
         type: 'hidden',
         name: 'dtargemonth',
-        value: targetmonth
+        value: offset
     }));
     $fm.appendTo(document.body);
     $fm.submit();
     $fm.remove();
 }
+function pageNation(os){
+    var $fm = $('<form />', {
+        method: 'POST',
+        action: '${pageContext.request.contextPath}/SavingMoneyDetail.do'
+    });
+    $fm.append($('<input />', {
+        type: 'hidden',
+        name: 'dtargetid',
+        value: userid
+    }));
+    $fm.append($('<input />', {
+        type: 'hidden',
+        name: 'dtargemonth',
+        value: targetmonth
+    }));
+    $fm.append($('<input />', {
+        type: 'hidden',
+        name: 'doffset',
+        value: os
+    }));
+    $fm.appendTo(document.body);
+    $fm.submit();
+    $fm.remove();
+
+}
 
 </script>
 <style>
+	nav{
+		font-size:1.2em;
+	}
     #myTable table {
         border-top: 1px solid #4f4d47;
         border-right: 1px solid #4f4d47;
@@ -116,41 +173,50 @@ function calender_func(){
 		    <a class="navbar-brand" href="#">節約カレンダー</a>
 		    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
 		      <li class="nav-item active">
-		        <a class="btn btn-primary" style="margin:3px;" href="#" onclick="calender_func();">詳細画面 <span class="sr-only">(current)</span></a>
+		        <a class="btn btn-primary" style="margin:3px;" href="#" onclick="calender_func();">カレンダー画面 <span class="sr-only">(current)</span></a>
 		      </li>
 		    </ul>
+		      <span class="navbar-text">
+			    合計金額:<% out.print(nfCur.format(totaldetailsum)); %>
+			  </span>
 		  </div>
 		</nav>
 <div id="demo01">
     <table id="myTable" class="tablesorter">
         <thead>
             <tr>
-                <th>プラン</th>
-                <th>データ容量</th>
-                <th>バージョン管理</th>
-                <th>料金</th>
+                <th>ID</th>
+                <th>項目</th>
+                <th>金額</th>
+                <th>日付</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>無料プラン</td>
-                <td>5GB</td>
-                <td>なし</td>
-                <td>無料</td>
-            </tr>
-            <tr>
-                <td>個人事業主プラン</td>
-                <td>30GB</td>
-                <td>１ヶ月まで</td>
-                <td>1000円/月</td>
-            </tr>
-            <tr>
-                <td>法人プラン</td>
-                <td>100GB</td>
-                <td>無制限</td>
-                <td>5000円/月</td>
-            </tr>
+        	<% if(itemList.length>0) {%>
+        		<% for (Product item : itemList) { %>
+	            <tr>
+	                <td><%= item.getId() %></td>
+	                <td><%= item.getTitle() %></td>
+	                <td><%= item.getPrice() %></td>
+	                <td><%= item.getDay() %></td>
+	            </tr>
+            	<% } %>
+        	<% } %>
         </tbody>
     </table>
+    <% if(totaldatacnt>10) {%>
+      <div class="row">
+        <div class="col-md-6 offset-md-3 py-2">
+          <nav aria-label="ページ送り">
+            <div class="text-center">
+              <ul class="pagination justify-content-center pagination-lg">
+              	<% for(int i=0;i<pagecnt;i++){ %>
+                <li class="page-item"><a class="page-link" href="#" onclick="pageNation('<%= (i+1) %>')"><%= (i+1) %></a></li>
+                <% } %>
+              </ul>
+            </div>
+          </nav>
+        </div>
+    <% } %>
 </div>
 </body>

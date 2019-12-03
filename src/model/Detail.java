@@ -1,19 +1,13 @@
 package model;
 
-public class Product {
+import java.util.HashMap;
+
+public class Detail {
     private int id;
     private int itemnum;
     private String userid;
     private String title;
-    private String day;
-
-    public String getDay() {
-		return day;
-	}
-	public void setDay(String day) {
-		this.day = day;
-	}
-	public String getTitle() {
+    public String getTitle() {
 		return title;
 	}
 	public String getUserid() {
@@ -26,7 +20,7 @@ public class Product {
 		this.title = title;
 	}
 	private int price;
-//    HashMap<String,String> map ;
+    HashMap<String,String> map ;
     private String buydate;
     private String regidate;
 
@@ -42,12 +36,12 @@ public class Product {
 	public void setRegidate(String regidate) {
 		this.regidate = regidate;
 	}
-//	public HashMap<String, String> getMap() {
-//		return map;
-//	}
-//	public void setMap(HashMap<String, String> map) {
-//		this.map = map;
-//	}
+	public HashMap<String, String> getMap() {
+		return map;
+	}
+	public void setMap(HashMap<String, String> map) {
+		this.map = map;
+	}
 	public int getId() {
 		return id;
 	}

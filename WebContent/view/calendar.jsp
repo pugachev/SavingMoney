@@ -7,12 +7,15 @@
 <%@page import="java.util.*" %>
 <%@ include file="/view/login.jsp" %>
 <%@page import="util.ReadProperties" %>
+<%@page import="java.text.NumberFormat" %>
 <%
 	//LoginActionからもらうデータ
 	String rcvID = "'"+(String)session.getAttribute("rcvmail")+"'";
 	String rcvPW = (String)session.getAttribute("rcvpassword");
 	//String rcvTargetMonth =  (String)session.getAttribute("month");
 
+	NumberFormat nfCur = NumberFormat.getCurrencyInstance();
+	int totalsum = Integer.parseInt((String)session.getAttribute("totalsum"));
 	String rcvTargetMonth = (String)session.getAttribute("targetMonth");
 	boolean isLogIn=false;
 	boolean isLogOut=false;
@@ -47,11 +50,14 @@
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 		<script src="${pageContext.request.contextPath}/js/jquery.minicalendar.js"></script>
 		<style>
-
+			nav{
+				font-size:1.2em;
+			}
 		</style>
 		<script>
-		    var tmonth = <%= rcvTargetMonth %>;
-		    var rcvid = <%= rcvID %>;
+		    var tmonth = '';
+		    var rcvid = '';
+		    var offset ='';
 			var contentsarray=[];
 			$(document).ready(function(){
 
@@ -85,6 +91,11 @@
 			            name: 'dtargemonth',
 			            value: tmonth
 			        }));
+			        $fm.append($('<input />', {
+			            type: 'hidden',
+			            name: 'doffset',
+			            value: offset
+			        }));
 			        $fm.appendTo(document.body);
 			        $fm.submit();
 			        $fm.remove();
@@ -116,6 +127,9 @@
 
 			$(window).on('load',function(){
 				console.log('tmonth=' + tmonth);
+			    tmonth = <%= rcvTargetMonth %>;
+			    rcvid = <%= rcvID %>;
+			    offset = '1';
 				$(document).on("click", ".targettable tr", function(){
 					var td = $(this)[0];
 					var tr = $(this).closest('tr')[0];
@@ -139,20 +153,22 @@
 					}
 				});
 
-			   	var headarray =['','ID','項目','値段'];
+			   	var headarray =[' ','項目','金額'];
 		   		contentsarray=[];
 			 	$('#mini-calendar').miniCalendar();
 				$('#targetTable td').on('click',function(){
 					var td = $(this)[0];
 					var tr = $(this).closest('tr')[0];
 					var tmparray = $(this).text().split(' ');
+					console.log('tmparray='+tmparray);
 					$('#targetdate').val(tmparray[0]);
 					if(tmparray!=null && tmparray.length>=2){
 						for(var j=1;j<tmparray.length;j++){
 							var innertmp =tmparray[j].split(':');
+							console.log('innertmp='+innertmp);
 							var rearray =[];
 							rearray.push(innertmp[0]);
-							rearray.push(innertmp[1]);
+ 							rearray.push(innertmp[1]);
 							rearray.push(innertmp[2]);
 							contentsarray.push(rearray);
 						}
@@ -248,13 +264,14 @@
 		        <a class="btn btn-danger" style="margin:3px;" href="#" onclick="logout();">ログアウト <span class="sr-only">(current)</span></a>
 		      </li>
 		    <% } %>
-		    </ul>
-		    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
 		      <li class="nav-item active">
 		        <a class="btn btn-primary" style="margin:3px;" href="#" onclick="detail_func();">詳細画面 <span class="sr-only">(current)</span></a>
 		      </li>
 		    </ul>
 		  </div>
+		  <span class="navbar-text">
+	          合計金額:<% out.print(nfCur.format(totalsum)); %>
+		  </span>
 		</nav>
 	    <div class="container-fluid">
 			<div id="wrap">

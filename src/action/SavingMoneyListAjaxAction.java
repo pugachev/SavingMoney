@@ -16,7 +16,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import dao.BuyListDAO;
-import model.Product;
+import model.DailySum;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -30,7 +30,7 @@ public class SavingMoneyListAjaxAction extends Action {
     	{
         	//画面からポストしてくる対象月
         	targetMonth =  Integer.parseInt(req.getParameter("targetmonth"));
-        	System.out.println("targetMonth=" + targetMonth);
+
     	}
     	else
     	{
@@ -47,9 +47,9 @@ public class SavingMoneyListAjaxAction extends Action {
         //対象月の終了日
     	String targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,targetMonthLastDay);
 
-        BuyListDAO dao = new BuyListDAO();
-        List<Product> rcv = dao.getShoppingList(userid,targetStart,targetEnd);
 
+        BuyListDAO dao = new BuyListDAO();
+        List<DailySum> rcv = dao.getDailySumList(userid,targetStart,targetEnd);
 
     	JSONObject obj = new JSONObject();
     	obj.put("year", LocalDate.now().getYear());
@@ -61,12 +61,9 @@ public class SavingMoneyListAjaxAction extends Action {
         	//対象日をセット
         	String tday[] = rcv.get(i).getBuydate().split("-");
         	int numday = Integer.parseInt( tday[2]);
-//        	System.out.println(tday[2]+" "+numday);
         	obj2.put("day", String.valueOf(numday));
-        	//titleをセット
-        	obj2.put("title",rcv.get(i).getTitle());
-        	//金額をセット
-        	obj2.put("price",rcv.get(i).getPrice());
+        	//合計金額をセット
+        	obj2.put("price",rcv.get(i).getDailysum());
         	//idをセット
         	obj2.put("id",rcv.get(i).getId());
         	jsonArray.add(obj2);

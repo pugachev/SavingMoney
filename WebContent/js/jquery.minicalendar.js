@@ -142,7 +142,8 @@ $(document).ready(function(){
 	    setEvent : function() {
 	      for(var i = 0; i < this.events.length; i++) {
 	        var dateID = 'calender-id' + this.events[i].day;
-	        var getText = $('<textarea>' + ' '+ this.events[i].id + ':' + this.events[i].title + ':' + this.events[i].price + '</textarea>');
+	        var getText = $('<textarea>' + ' '+ '＊' + ':' + '合計金額' + ':' + this.events[i].price + '</textarea>');
+//	        var getText = $('<textarea>' + ' '+ '合計金額 :' + this.events[i].price + '</textarea>');
 	        // typeがある場合classを付与
 	        var type = "";
 	        if (this.events[i].type) {

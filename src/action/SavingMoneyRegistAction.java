@@ -34,9 +34,9 @@ public class SavingMoneyRegistAction extends DispatchAction {
     	//フォーマット
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     	//システムから取得した月
-//    	int targetMonth =  LocalDate.now().getMonthValue();
+
     	int targetMonth = Integer.parseInt(rcvMonth);
-    	System.out.println("rcvMonth=" + rcvMonth + " targetMonth=" + targetMonth);
+
 
     	String setDate = String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,Integer.parseInt(rcvTargetDate));
 

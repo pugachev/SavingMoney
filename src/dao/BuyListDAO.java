@@ -41,12 +41,94 @@ public class BuyListDAO {
 	private static final String REGIUSER = "insert into loginUser(mail,password,regidate) values(?,?,?);";
 
 	//「userid」毎に「日付」で合計した購入金額をだす
-	private static final String SUMPRICE = "SELECT sum(price) as sumprice,buydate FROM struts.buylist where userid= ? group by buydate;";
+	private static final String SUMPRICE = "SELECT sum(price) as sumprice,buydate FROM struts.buylist where userid= ? group by buydate having buydate >= ? and buydate <= ?;";
+
+	//「上限」と「オフセット」ありで買い物明細を取得する
+	private static final String SHOPPINGLIST_LIMIT ="select buylist.id as id,buylist.price as price,buylist.buydate as buydate,buylist.regidate as regidate,itemlist.title as title from buylist left join itemlist on buylist.itemnum = itemlist.itemnum where userid=? and buydate between ?  and ? order by  buydate asc limit 10 offset ?";
+
+	private static final String COUNT_DATA ="select count(buylist.id) as totalcnt from buylist  left join itemlist on buylist.itemnum = itemlist.itemnum where userid= ? and buydate  between ? and ?;";
+
+	//月別合計
+	private static final String TOTALSUM_MONTH="select sum(price) as totalprice from buylist  left join itemlist on buylist.itemnum = itemlist.itemnum where userid=? and buydate  between ? and ?;";
 
     private DataSource source;
 
     public BuyListDAO() {
         source = DaoUtil.getSource();
+    }
+
+    //月別の合計金額を調べる
+    //ログインユーザーの指定期間でのデータ数を調べる
+    public int getTotalSum(String userid,String date,String date2) throws SQLException
+    {
+        Connection con = null;
+        PreparedStatement pStmt = null;
+        ResultSet rs = null;
+
+        int ret=0;
+
+        try {
+
+            con = source.getConnection();
+
+            pStmt = con.prepareStatement(TOTALSUM_MONTH);
+            pStmt.setString(1,userid);
+            pStmt.setString(2,date);
+            pStmt.setString(3,date2);
+            rs = pStmt.executeQuery();
+
+            while (rs.next()) {
+            	ret=Integer.parseInt(rs.getString("totalprice"));
+            }
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            if(rs != null){
+                rs.close();
+            }
+            pStmt.close();
+            con.close();
+        }
+
+        return ret;
+    }
+
+
+
+
+    //ログインユーザーの指定期間でのデータ数を調べる
+    public int getTotalDataCnt(String userid,String date,String date2) throws SQLException
+    {
+        Connection con = null;
+        PreparedStatement pStmt = null;
+        ResultSet rs = null;
+
+        int ret=0;
+
+        try {
+
+            con = source.getConnection();
+
+            pStmt = con.prepareStatement(COUNT_DATA);
+            pStmt.setString(1,userid);
+            pStmt.setString(2,date);
+            pStmt.setString(3,date2);
+            rs = pStmt.executeQuery();
+
+            while (rs.next()) {
+            	ret=Integer.parseInt(rs.getString("totalcnt"));
+            }
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            if(rs != null){
+                rs.close();
+            }
+            pStmt.close();
+            con.close();
+        }
+
+        return ret;
     }
 
     //ユーザーの存在有無を調べる
@@ -210,7 +292,7 @@ public class BuyListDAO {
     }
 
     //対象付きのショピングリストを作成する
-    public List<Product> getShoppingList(String userid,String date,String date2) throws SQLException
+    public List<Product> getShoppingList(String userid,String date,String date2,int offset) throws SQLException
     {
         List<Product> list = new ArrayList<Product>();
         Connection con = null;
@@ -220,9 +302,13 @@ public class BuyListDAO {
         try
         {
             con = source.getConnection();
-            String sqltmp = "select buylist.id as id,buylist.price as price,buylist.buydate as buydate,buylist.regidate as regidate,itemlist.title as title from buylist  left join itemlist on buylist.itemnum = itemlist.itemnum where userid='"+userid+"' and buydate " +" between '"+ date+ "' and '" + date2 +"'" + " order by  buydate asc";
-            System.out.println("sqltmp " + sqltmp);
-            pStmt = con.prepareStatement(sqltmp);
+            //SHOPPINGLIST_LIMIT
+            //"select buylist.id as id,buylist.price as price,buylist.buydate as buydate,buylist.regidate as regidate,itemlist.title as title from buylist left join itemlist on buylist.itemnum = itemlist.itemnum where userid=? and buydate between ?  and ? order by  buydate asc limit 10 offset ?";
+            pStmt = con.prepareStatement(SHOPPINGLIST_LIMIT);
+            pStmt.setString(1,userid);
+            pStmt.setString(2,date);
+            pStmt.setString(3,date2);
+            pStmt.setInt(4,offset);
             rs = pStmt.executeQuery();
 
             while (rs.next())
@@ -275,17 +361,24 @@ public class BuyListDAO {
     }
 
     //対象月のリストを作る
-    public List<DailySum> getDailySumList(String userid) throws SQLException {
+    public List<DailySum> getDailySumList(String userid,String date,String date2) throws SQLException {
         List<DailySum> list = new ArrayList<DailySum>();
         Connection con = null;
         PreparedStatement pStmt = null;
         ResultSet rs = null;
 
         try{
-            pStmt = con.prepareStatement(REGIUSER);
+        	con = source.getConnection();
+            pStmt = con.prepareStatement(SUMPRICE);
             pStmt.setString(1,userid);
+            pStmt.setString(2,date);
+            pStmt.setString(3,date2);
+            rs = pStmt.executeQuery();
 
-            pStmt.executeUpdate();
+            while (rs.next())
+            {
+                list.add(getDailySum(rs));
+            }
 
         }catch(SQLException ex){
             throw ex;
@@ -340,7 +433,6 @@ public class BuyListDAO {
     }
     private DailySum getDailySum(ResultSet rs) throws SQLException {
     	DailySum dsum = new DailySum();
-    	dsum.setId(rs.getInt("id"));
     	dsum.setDailysum(rs.getInt("sumprice"));
     	dsum.setBuydate(rs.getString("buydate"));
         return dsum;

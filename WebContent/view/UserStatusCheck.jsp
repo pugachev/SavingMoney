@@ -4,12 +4,14 @@
 <%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
 <%@page import="model.Product" %>
+<%@page import="model.UserInfo" %>
 <%@page import="java.util.*" %>
 <%
 	//このJSPが読み込まれた際にユーザーのログイン状態を判定する処理
-	String loginStatus = (String)session.getAttribute("loginStatus");
+	/* String loginStatus = (String)session.getAttribute("loginStatus"); */
+	UserInfo uinfo = (UserInfo)session.getAttribute("uinfo");
 	String isStatus="'OK'";
-	if(loginStatus==null || (loginStatus!=null && !loginStatus.equals("OK")))
+	if(uinfo==null || (uinfo!=null && !uinfo.getLoginStatus().equals("OK")))
 	{
 		isStatus="'NG'";
 	}

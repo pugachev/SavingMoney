@@ -115,6 +115,11 @@ function pageNation(os){
 
 </script>
 <style>
+.tablesorter-default{
+	width:95%;
+	text-align:center;
+	margin: 10px auto;
+}
 	nav{
 		font-size:1.2em;
 	}
@@ -123,6 +128,7 @@ function pageNation(os){
         border-right: 1px solid #4f4d47;
         width: 640px;
         border-spacing: 0;
+        padding:100px;
         margin: 0 auto;
     }
     #myTable th, td {
@@ -156,11 +162,6 @@ function pageNation(os){
             color: #4f4d47;
             display: block;
         }
-
-        /* contentでタイトルを追加 */
-        #demo01 td:nth-of-type(2):before { content: データ容量}
-        #demo01 td:nth-of-type(3):before { content: バージョン管理}
-        #demo01 td:nth-of-type(4):before { content: 料金}
     }
 </style>
 </head>
@@ -218,5 +219,6 @@ function pageNation(os){
           </nav>
         </div>
     <% } %>
+	</div>
 </div>
 </body>

@@ -51,11 +51,39 @@ public class BuyListDAO {
 	//月別合計
 	private static final String TOTALSUM_MONTH="select sum(price) as totalprice from buylist  left join itemlist on buylist.itemnum = itemlist.itemnum where userid=? and buydate  between ? and ?;";
 
+	//外部出力
+	private static final String OUTPUT_FILE="SELECT * FROM buylist INTO OUTFILE '/Users/mtake/Desktop/test.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\\r\\n'; ";
+
     private DataSource source;
 
     public BuyListDAO() {
         source = DaoUtil.getSource();
     }
+
+    public void outPutFle(String userid,String date,String date2) throws SQLException
+    {
+        Connection con = null;
+        PreparedStatement pStmt = null;
+        ResultSet rs = null;
+
+        try {
+
+            con = source.getConnection();
+
+            pStmt = con.prepareStatement(OUTPUT_FILE);
+            rs = pStmt.executeQuery();
+
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            if(rs != null){
+                rs.close();
+            }
+            pStmt.close();
+            con.close();
+        }
+    }
+
 
     //月別の合計金額を調べる
     //ログインユーザーの指定期間でのデータ数を調べる

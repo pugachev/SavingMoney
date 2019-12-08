@@ -11,18 +11,23 @@
   <action-mappings>
     <action name="SavingMoneyListForm" type="action.SavingMoneyListAction" path="/SavingMoneyList">
       <forward name="success" path="/view/calendar.jsp"/>
+      <forward name="failure" path="/index.jsp"/>
     </action>
 
     <action name="SavingMoneyListForm" type="action.SavingMoneyDetailAction" path="/SavingMoneyDetail">
       <forward name="success" path="/view/detail.jsp"/>
     </action>
 
+    <action name="SavingMoneyRegistForm" type="action.SavingMoneyRegistAction" path="/SavingMoneyRegist">
+      <forward name="success" path="/SavingMoneyList.do"/>
+    </action>
+
     <action name="SavingMoneyListForm" type="action.SavingMoneyListAjaxAction" path="/SavingMoneyListAjax">
       <forward name="success" path="/view/calendar.jsp"/>
     </action>
 
-    <action name="SavingMoneyRegistForm" type="action.SavingMoneyRegistAction" path="/SavingMoneyRegist">
-      <forward name="success" path="/SavingMoneyList.do"/>
+    <action name="SavingMoneyRegistForm" type="action.SavingMoneyListOutputFileAjaxAction" path="/SavingMoneyListOutputFileAjax">
+      <forward name="success" path="/view/calendar.jsp"/>
     </action>
 
     <action name="SavingMoneyRegistForm" type="action.SavingMoneyDeleteAction" path="/SavingMoneyDelete">

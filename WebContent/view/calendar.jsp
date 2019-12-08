@@ -125,6 +125,25 @@
 			        $fm.remove();
 			  }
 
+			  function outputfile_func(){
+			        var $fm = $('<form />', {
+			            method: 'POST',
+			            action: '${pageContext.request.contextPath}/SavingMoneyListOutputFileAjax.do'
+			        });
+			        $fm.append($('<input />', {
+			            type: 'hidden',
+			            name: 'dtargetid',
+			            value: rcvid
+			        }));
+			        $fm.append($('<input />', {
+			            type: 'hidden',
+			            name: 'dtargemonth',
+			            value: tmonth
+			        }));
+			        $fm.appendTo(document.body);
+			        $fm.submit();
+			        $fm.remove();
+			  }
 			$(window).on('load',function(){
 				console.log('tmonth=' + tmonth);
 			    tmonth = <%= rcvTargetMonth %>;
@@ -266,6 +285,12 @@
 		    <% } %>
 		      <li class="nav-item active">
 		        <a class="btn btn-primary" style="margin:3px;" href="#" onclick="detail_func();">詳細画面 <span class="sr-only">(current)</span></a>
+		      </li>
+		      <li class="nav-item active">
+		        <a class="btn btn-primary" style="margin:3px;" href="#" onclick="outputfile_func();">CSV出力 <span class="sr-only">(current)</span></a>
+		      </li>
+		      <li class="nav-item active">
+		        <a class="btn btn-primary" style="margin:3px;" href="#" onclick="detail_func();">CSV読込 <span class="sr-only">(current)</span></a>
 		      </li>
 		    </ul>
 		  </div>

@@ -16,17 +16,29 @@ import org.apache.struts.action.ActionMapping;
 
 import dao.BuyListDAO;
 import model.DailySum;
+import model.UserInfo;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 
 public class SavingMoneyListAction extends Action {
-    public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest req,HttpServletResponse res) throws Exception {
-    	String loginStatus = (String)req.getSession(true).getAttribute("loginStatus");
+    @SuppressWarnings("unused")
+	public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest req,HttpServletResponse res) throws Exception {
+    	//セッションからUserInfoを取得する
+    	UserInfo uinfo = (UserInfo)req.getSession(true).getAttribute("uinfo");
+    	if(uinfo==null || (uinfo!=null && uinfo.getUserId().equals(""))) {
+    		return mapping.findForward("failure");
+    	}
 
-    	String userid = (String)req.getSession(true).getAttribute("rcvmail");
+
+//    	String loginStatus = (String)req.getSession(true).getAttribute("loginStatus");
+    	String loginStatus = (String)uinfo.getLoginStatus();
+
+//    	String userid = (String)req.getSession(true).getAttribute("rcvmail");
+    	String userid = (String)uinfo.getUserId();
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    	String rcvMonth = (String)req.getParameter("thisMonth");
+//    	String rcvMonth = (String)req.getParameter("thisMonth");
+    	String rcvMonth = (String)uinfo.getDispMonth();
     	int totalsum=0;
     	if(rcvMonth==null || (rcvMonth!=null && rcvMonth.equals(""))) {
     		rcvMonth = (String)req.getParameter("targetmonth");

@@ -38,11 +38,11 @@ Product[] itemList=null;
 	int pagecnt = 0;
 	if(totaldatacnt%10==0)
 	{
-		pagecnt = totaldatacnt/10;
+		pagecnt = totaldatacnt/20;
 	}
 	else
 	{
-		pagecnt = (totaldatacnt/10)+1;
+		pagecnt = (totaldatacnt/20)+1;
 	}
 	int presentPageNum = rcvUinfo.getPresetPageNum();
 

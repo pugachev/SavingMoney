@@ -172,25 +172,28 @@
 					}
 				});
 
-			   	var headarray =[' ','項目','金額'];
+			   	/* var headarray =[' ','項目','金額']; */
+			   	var headarray =['金額'];
 		   		contentsarray=[];
 			 	$('#mini-calendar').miniCalendar();
 				$('#targetTable td').on('click',function(){
 					var td = $(this)[0];
 					var tr = $(this).closest('tr')[0];
+					console.log('$(this).text()='+$(this).text());
 					var tmparray = $(this).text().split(' ');
 					console.log('tmparray='+tmparray);
 					$('#targetdate').val(tmparray[0]);
 					if(tmparray!=null && tmparray.length>=2){
-						for(var j=1;j<tmparray.length;j++){
-							var innertmp =tmparray[j].split(':');
-							console.log('innertmp='+innertmp);
+						//for(var j=1;j<tmparray.length;j++){
+							//var innertmp =tmparray[j].split(':');
+							//console.log('innertmp='+innertmp);
 							var rearray =[];
-							rearray.push(innertmp[0]);
- 							rearray.push(innertmp[1]);
-							rearray.push(innertmp[2]);
+							//rearray.push(innertmp[0]);
+ 							/* rearray.push(tmparray[1]); */
+							rearray.push(tmparray[2]);
 							contentsarray.push(rearray);
-						}
+						//}
+
 					}
 
 					$('#exampleModal').modal();
@@ -204,32 +207,24 @@
 						var table = document.createElement('table');
 						$('#exampleModal .modal-body table').addClass('table table-bordered table-striped targettable');
 						// tr(横)部分のループ
-						for (var i = 0; i < tmparray.length; i++) {
-						    // tr要素を生成
-						    var tr = document.createElement('tr');
-						    // th・td(縦)部分のループ
-						    for (var j = 0; j <3; j++) {
-						        // 1行目のtr要素の時
-						        if(i === 0) {
-						            // th要素を生成
-						            var th = document.createElement('th');
-						            // th要素内にテキストを追加
-						            th.textContent = headarray[j];
-						            // th要素をtr要素の子要素に追加
-						            tr.appendChild(th);
-						        }else{
-						            // td要素を生成
-						            var td = document.createElement('td');
-						            // td要素内にテキストを追加
-						            td.textContent = contentsarray[i-1][j];
-						            console.log(contentsarray[i-1][j]);
-						            // td要素をtr要素の子要素に追加
-						            tr.appendChild(td);
-								}
-						    }
-						    // tr要素をtable要素の子要素に追加
-						    table.appendChild(tr);
-						}
+						/* for (var i = 0; i < tmparray.length; i++) { */
+						// tr要素を生成
+						var tr = document.createElement('tr');
+			            // th要素を生成
+			            var th = document.createElement('th');
+			            // th要素内にテキストを追加
+			            th.textContent = headarray[0];
+			            // th要素をtr要素の子要素に追加
+			            tr.appendChild(th);
+			            // td要素を生成
+			            var td = document.createElement('td');
+			            // td要素内にテキストを追加
+			            td.textContent = contentsarray[0][0];
+			            console.log(contentsarray[0][0]);
+			            // td要素をtr要素の子要素に追加
+			            tr.appendChild(td);
+					    // tr要素をtable要素の子要素に追加
+					    table.appendChild(tr);
 
 						// 生成したtable要素を追加する
 						$('table.table-bordered.table-striped.targettable').remove()

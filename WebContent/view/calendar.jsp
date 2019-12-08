@@ -4,19 +4,19 @@
 <%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
 <%@page import="model.Product" %>
+<%@page import="model.UserInfo" %>
 <%@page import="java.util.*" %>
 <%@ include file="/view/login.jsp" %>
 <%@page import="util.ReadProperties" %>
 <%@page import="java.text.NumberFormat" %>
 <%
-	//LoginActionからもらうデータ
-	String rcvID = "'"+(String)session.getAttribute("rcvmail")+"'";
-	String rcvPW = (String)session.getAttribute("rcvpassword");
-	//String rcvTargetMonth =  (String)session.getAttribute("month");
-
+	//SavingMoneyListActionからもらうデータ
+	UserInfo rcvUinfo = (UserInfo)session.getAttribute("uinfo");
+	String rcvID = "'"+rcvUinfo.getUserId()+"'";
 	NumberFormat nfCur = NumberFormat.getCurrencyInstance();
-	int totalsum = Integer.parseInt((String)session.getAttribute("totalsum"));
-	String rcvTargetMonth = (String)session.getAttribute("targetMonth");
+	int totalsum = rcvUinfo.getDispMonthSum();
+	String rcvTargetMonth = rcvUinfo.getDispMonth();
+	int offset = rcvUinfo.getPresetPageNum();
 	boolean isLogIn=false;
 	boolean isLogOut=false;
 	String fileName="/view/";
@@ -148,7 +148,7 @@
 				console.log('tmonth=' + tmonth);
 			    tmonth = <%= rcvTargetMonth %>;
 			    rcvid = <%= rcvID %>;
-			    offset = '1';
+			    offset = 1;
 				$(document).on("click", ".targettable tr", function(){
 					var td = $(this)[0];
 					var tr = $(this).closest('tr')[0];
@@ -263,7 +263,6 @@
 	<body>
 		<form action="${pageContext.request.contextPath}/UserLogout.do">
 			<input type="hidden" id="hiddenID" name="hiddenID" value="<%= rcvID %>"/>
-			<input type="hidden" id="hiddenPW" name="hiddenID" value="<%= rcvPW %>"/>
 			<input type="submit" id="logoutbtn" style="display:none"/>
 		</form>
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">

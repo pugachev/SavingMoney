@@ -1,6 +1,7 @@
 
 package action;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
@@ -15,21 +16,31 @@ import org.apache.struts.action.ActionMapping;
 
 import dao.BuyListDAO;
 import model.Product;
+import model.UserInfo;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 
 public class SavingMoneyDetailAction extends Action {
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest req,HttpServletResponse res) throws Exception {
-    	String loginStatus = (String)req.getSession(true).getAttribute("loginStatus");
-    	String userid = (String)req.getParameter("dtargetid");
-    	String rcvMonth = (String)req.getParameter("dtargemonth");
-    	int rcvOffset = Integer.parseInt((String)req.getParameter("doffset"));
-    	int totalDataCnt = 0;
+    	//セッションからUserInfoを取得する
+    	UserInfo uinfo = (UserInfo)req.getSession(true).getAttribute("uinfo");
+    	if(uinfo==null || (uinfo!=null && uinfo.getUserId().equals(""))) {
+    		return mapping.findForward("failure");
+    	}
+    	String userid = (String)uinfo.getUserId();
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    	String rcvMonth = (String)uinfo.getDispMonth();
+    	int rcvOffset = uinfo.getPresetPageNum();
+    	if(req.getParameter("doffset")!=null && Integer.parseInt(req.getParameter("doffset"))>0) {
+    		rcvOffset = Integer.parseInt(req.getParameter("doffset"));
+    	}
+    	int totalDataCnt=0;
     	int totaldetailsum=0;
     	if(rcvMonth==null || (rcvMonth!=null && rcvMonth.equals(""))) {
     		rcvMonth = (String)req.getParameter("targetmonth");
     	}
+
     	//データ取得処理
     	if(req.getParameter("targetmonth")!=null)
     	{
@@ -49,8 +60,6 @@ public class SavingMoneyDetailAction extends Action {
             List<Product> rcv = dao.getShoppingList(userid,targetStart,targetEnd,tmpoffset);
 
         	JSONObject obj = new JSONObject();
-//        	obj.put("year", LocalDate.now().getYear());
-//        	obj.put("month", targetMonth);
         	JSONArray jsonArray = new JSONArray();
             for(int i=0;i<rcv.size();i++)
             {
@@ -68,12 +77,12 @@ public class SavingMoneyDetailAction extends Action {
             	jsonArray.add(obj2);
             }
 
-            obj.put("event", jsonArray);
-            req.getSession(true).setAttribute("buydata", obj.toString());
-            req.getSession(true).setAttribute("userid", userid);
-            req.getSession(true).setAttribute("targetMonth", String.valueOf(targetMonth));
-            req.getSession(true).setAttribute("totalDataCnt", String.valueOf(totalDataCnt));
-            req.getSession(true).setAttribute("totaldetailsum", String.valueOf(totaldetailsum));
+            uinfo.setListData(jsonArray.toString());
+            uinfo.setUserId(userid);
+            uinfo.setDispMonth(String.valueOf(targetMonth));
+            uinfo.setDispMonthDataCnt(totalDataCnt);
+            uinfo.setDispMonthSum(totaldetailsum);
+            uinfo.setPresetPageNum(rcvOffset);
     	}
 
     	else
@@ -105,8 +114,6 @@ public class SavingMoneyDetailAction extends Action {
             List<Product> rcv = dao.getShoppingList(userid,targetStart,targetEnd,tmpoffset);
 
         	JSONObject obj = new JSONObject();
-//        	obj.put("year", LocalDate.now().getYear());
-//        	obj.put("month", targetMonth);
         	JSONArray jsonArray = new JSONArray();
             for(int i=0;i<rcv.size();i++)
             {
@@ -124,13 +131,14 @@ public class SavingMoneyDetailAction extends Action {
             	jsonArray.add(obj2);
             }
 
-            req.getSession(true).setAttribute("buydata", jsonArray.toString());
-            req.getSession(true).setAttribute("userid", userid);
-            req.getSession(true).setAttribute("targetMonth", String.valueOf(targetMonth));
-            req.getSession(true).setAttribute("totalDataCnt", String.valueOf(totalDataCnt));
-            req.getSession(true).setAttribute("totaldetailsum", String.valueOf(totaldetailsum));
+            uinfo.setListData(jsonArray.toString());
+            uinfo.setUserId(userid);
+            uinfo.setDispMonth(String.valueOf(targetMonth));
+            uinfo.setDispMonthDataCnt(totalDataCnt);
+            uinfo.setDispMonthSum(totaldetailsum);
+            uinfo.setPresetPageNum(rcvOffset);
     	}
-
+       	req.getSession(true).setAttribute("uinfo", uinfo);
         return mapping.findForward("success");
     }
 

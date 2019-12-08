@@ -24,9 +24,10 @@ public class UserLoginAction extends DispatchAction {
 		//ユーザー情報を生成する
 		UserInfo uinfo = new UserInfo();
 
-		//2.セッションにログイン状態をセット(初期値はNG)
+		//2-1.セッションにログイン状態をセット(初期値はNG)
 		uinfo.setLoginStatus("NG");
-//		req.getSession(true).setAttribute("loginStatus", "NG");
+		//2-2.セッションに詳細画面の現在のページ数をセット(初期値は1)
+		uinfo.setPresetPageNum(1);
 
 		//3.パラメータの取得
     	String rcvmail = (String)req.getParameter("regiEmail");
@@ -41,7 +42,6 @@ public class UserLoginAction extends DispatchAction {
             //4-1-1.パスワード不一致の場合
             if(!retPassword.equals(rcvpassword))
             {
-//            	req.getSession(true).setAttribute("loginStatus", "NG");
             	req.getSession(true).setAttribute("uinfo", uinfo);
             	return mapping.findForward("failure");
             }
@@ -49,10 +49,8 @@ public class UserLoginAction extends DispatchAction {
             else
             {
             	uinfo.setLoginStatus("OK");
-//            	req.getSession(true).setAttribute("loginStatus", "OK");
             	uinfo.setUserId(rcvmail);
             	req.getSession(true).setAttribute("rcvmail", rcvmail);
-//            	req.getSession(true).setAttribute("rcvpassword", rcvpassword);
             	req.getSession(true).setAttribute("uinfo", uinfo);
             	return mapping.findForward("success");
             }
@@ -60,7 +58,6 @@ public class UserLoginAction extends DispatchAction {
     	//IDとPWが揃ってこなかった場合
     	else
     	{
-//    		req.getSession(true).setAttribute("loginStatus", "NG");
     		req.getSession(true).setAttribute("uinfo", uinfo);
         	return mapping.findForward("failure");
     	}

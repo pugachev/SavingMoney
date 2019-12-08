@@ -4,6 +4,7 @@
 <%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
 <%@page import="model.Product" %>
+<%@page import="model.UserInfo" %>
 <%@page import="java.util.*" %>
 <%@page import="com.fasterxml.jackson.databind.JsonNode" %>
 <%@page import="com.fasterxml.jackson.databind.ObjectMapper" %>
@@ -13,14 +14,19 @@
 Product[] itemList=null;
 %>
 <%
-	//LoginActionからもらうデータ
-	String rcvID = "'"+(String)session.getAttribute("userid")+"'";
-	String rcvTargetMonth = (String)session.getAttribute("targetMonth");
 
-	String rcvJsonData = (String)session.getAttribute("buydata");
-	int totaldatacnt= Integer.parseInt((String)session.getAttribute("totalDataCnt"));
+	//SavingMoneyDetailActionからもらうデータ
+	UserInfo rcvUinfo = (UserInfo)session.getAttribute("uinfo");
+	String rcvID = "'"+rcvUinfo.getUserId()+"'";
 	NumberFormat nfCur = NumberFormat.getCurrencyInstance();
-	int totaldetailsum= Integer.parseInt((String)session.getAttribute("totaldetailsum"));
+	int totalsum = rcvUinfo.getDispMonthSum();
+	String rcvTargetMonth = rcvUinfo.getDispMonth();
+	int offset = rcvUinfo.getPresetPageNum();
+
+	/* String rcvJsonData = (String)session.getAttribute("buydata"); */
+	String rcvJsonData = rcvUinfo.getListData();
+	int totaldatacnt= rcvUinfo.getDispMonthDataCnt();
+	int totaldetailsum= rcvUinfo.getDispMonthSum();
 	if(rcvJsonData!=null){
         ObjectMapper mapper = new ObjectMapper();
 
@@ -38,6 +44,8 @@ Product[] itemList=null;
 	{
 		pagecnt = (totaldatacnt/10)+1;
 	}
+	int presentPageNum = rcvUinfo.getPresetPageNum();
+
 %>
 <!DOCTYPE html>
 <html>
@@ -59,13 +67,15 @@ Product[] itemList=null;
 var userid='';
 var targetmonth='';
 var offset='';
+var tmp='';
 $(document).ready(function()
-
 	    {
 			userid=<%= rcvID %>;
 			targetmonth=<%= rcvTargetMonth %>;
 			console.log('userid=' + userid + ' targetmonth='+targetmonth);
 	        $("#myTable").tablesorter();
+	        tmp='.page'+<%= presentPageNum %>;
+	    	$(tmp).addClass("active");
 	    }
 	);
 function calender_func(offset){
@@ -88,6 +98,14 @@ function calender_func(offset){
     $fm.remove();
 }
 function pageNation(os){
+
+	//if(os!=1){
+	//	tmp = '.page'+(os-1);
+	//}
+	//$(tmp).removeClass("active");
+	tmp = '.page'+os;
+
+
     var $fm = $('<form />', {
         method: 'POST',
         action: '${pageContext.request.contextPath}/SavingMoneyDetail.do'
@@ -212,7 +230,7 @@ function pageNation(os){
             <div class="text-center">
               <ul class="pagination justify-content-center pagination-lg">
               	<% for(int i=0;i<pagecnt;i++){ %>
-                <li class="page-item"><a class="page-link" href="#" onclick="pageNation('<%= (i+1) %>')"><%= (i+1) %></a></li>
+                <li class="page-item page<%= (i+1) %>"><a class="page-link" href="#" onclick="pageNation('<%= (i+1) %>')"><%= (i+1) %></a></li>
                 <% } %>
               </ul>
             </div>

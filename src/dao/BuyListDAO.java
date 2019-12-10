@@ -106,7 +106,12 @@ public class BuyListDAO {
             rs = pStmt.executeQuery();
 
             while (rs.next()) {
-            	ret=Integer.parseInt(rs.getString("totalprice"));
+            	if(rs.getString("totalprice")!=null) {
+            		ret=Integer.parseInt(rs.getString("totalprice"));
+            	}else {
+            		ret=0;
+            	}
+
             }
         } catch (SQLException ex) {
             throw ex;

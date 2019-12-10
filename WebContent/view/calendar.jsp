@@ -298,6 +298,21 @@
 			</div>
 		</div>
 	</body>
+	<script>
+		$(window).load(function() {
+		    for(var j=1;j<=31;j++){
+		    	var tmpday = '#calender-id'+j+' .calender-label';
+		    	console.log('★ tmpday='+tmpday);
+		    	if($(tmpday)[0]!=null && $(tmpday)[0].textContent!=''){
+		    		var tmpCalenderArray = $(tmpday)[0].textContent.split(' ');
+		    		if(parseInt(tmpCalenderArray[2])>3000){
+		    			$(tmpday).css("background-color", "#FF0000");
+
+		    		}
+		    	}
+		    }
+		});
+	</script>
 </html>
 <!-- モーダル部分始まり -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

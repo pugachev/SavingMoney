@@ -36,9 +36,9 @@ $(document).ready(function(){
 	    this.printType(this.year, this.month);
 	    // 取得したイベントを表示
 	    this.setEvent();
+
+
 	  };
-
-
 
 	  $.wop.miniCalendar.prototype = {
 

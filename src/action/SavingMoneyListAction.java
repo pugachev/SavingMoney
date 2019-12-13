@@ -28,28 +28,97 @@ public class SavingMoneyListAction extends Action {
     	String loginStatus = (String)uinfo.getLoginStatus();
     	String userid = (String)uinfo.getUserId();
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    	String rcvYear = (String)req.getParameter("targetyear");
     	String rcvMonth = (String)uinfo.getDispMonth();
     	int totalsum=0;
     	if(rcvMonth==null || (rcvMonth!=null && rcvMonth.equals(""))) {
     		rcvMonth = (String)req.getParameter("targetmonth");
     	}
-
+    	int targetMonthLastDay=0;
+    	String targetStart="";
+    	String targetEnd="";
     	//データ取得処理
     	if(req.getParameter("targetmonth")!=null)
     	{
         	//画面からポストしてくる対象月
         	int targetMonth =  Integer.parseInt(req.getParameter("targetmonth"));
-        	//対象月の末尾
-        	int targetMonthLastDay = YearMonth.of(LocalDate.now().getYear(), targetMonth).lengthOfMonth();
-        	//対象月の開始日
-        	String targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,1);
-            //対象月の終了日
-        	String targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,targetMonthLastDay);
+        	if(targetMonth>12) {
+        		targetMonth=1;
+        	}
+
+        	if(targetMonth==1) {
+        		//年を切り替えるかを判断
+        		if(uinfo.getPreDispMonth().contentEquals("12")&&targetMonth==1)
+        		{
+                	//対象月の末尾
+                	targetMonthLastDay = YearMonth.of(LocalDate.now().getYear()+1, targetMonth).lengthOfMonth();
+                	//対象月の開始日
+                	targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,1);
+                    //対象月の終了日
+                	targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,targetMonthLastDay);
+                	//対象年を格納
+//                	uinfo.setDispYear(uinfo.getDispYear()+1);
+                	uinfo.setDispYear(String.valueOf(Integer.parseInt(uinfo.getDispYear())+1));
+                	//対象月を格納
+                	uinfo.setDispMonth(String.valueOf(targetMonth));
+        		}
+        		else
+        		{
+                	//対象月の末尾
+                	targetMonthLastDay = YearMonth.of(LocalDate.now().getYear(), targetMonth).lengthOfMonth();
+                	//対象月の開始日
+                	targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,1);
+                    //対象月の終了日
+                	targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,targetMonthLastDay);
+                	//対象年を格納
+                	//uinfo.setDispYear(String.valueOf(LocalDate.now().getYear()));
+        		}
+        	}
+        	else if(targetMonth==12)
+        	{
+        		//年を切り替えるかを判断
+        		if(uinfo.getPreDispMonth().contentEquals("1")&&targetMonth==12)
+        		{
+                	//対象月の末尾
+                	targetMonthLastDay = YearMonth.of(LocalDate.now().getYear()-1, targetMonth).lengthOfMonth();
+                	//対象月の開始日
+                	targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,1);
+                    //対象月の終了日
+                	targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,targetMonthLastDay);
+                	//対象年を格納
+                	uinfo.setDispYear(String.valueOf(Integer.parseInt(uinfo.getDispYear())-1));
+                	//対象月を格納
+                	uinfo.setDispMonth(String.valueOf(targetMonth));
+        		}
+        		else
+        		{
+                	//対象月の末尾
+                	targetMonthLastDay = YearMonth.of(LocalDate.now().getYear(), targetMonth).lengthOfMonth();
+                	//対象月の開始日
+                	targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,1);
+                    //対象月の終了日
+                	targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,targetMonthLastDay);
+                	//対象年を格納
+                	//uinfo.setDispYear(String.valueOf(LocalDate.now().getYear()));
+        		}
+    	    }
+        	else
+        	{
+            	//対象月の末尾
+            	targetMonthLastDay = YearMonth.of(LocalDate.now().getYear(), targetMonth).lengthOfMonth();
+            	//対象月の開始日
+            	targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,1);
+                //対象月の終了日
+            	targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,targetMonthLastDay);
+            	//対象年を格納
+            	//uinfo.setDispYear(String.valueOf(LocalDate.now().getYear()));
+        	}
 
             BuyListDAO dao = new BuyListDAO();
             //月別合計金額
             totalsum = dao.getTotalSum(userid,targetStart,targetEnd);
             uinfo.setDispMonth(String.valueOf(targetMonth));
+            uinfo.setPreDispMonth(String.valueOf(targetMonth));
             uinfo.setDispMonthSum(totalsum);
 //            req.getSession(true).setAttribute("targetMonth", String.valueOf(targetMonth));
 //            req.getSession(true).setAttribute("totalsum", String.valueOf(totalsum));
@@ -69,19 +138,69 @@ public class SavingMoneyListAction extends Action {
             	//システムから取得した対象月
             	targetMonth =  LocalDate.now().getMonthValue();
     		}
+        	if(targetMonth>12) {
+        		targetMonth=targetMonth-1;
+        	}
 
-
-    		//対象月の末尾
-        	int targetMonthLastDay = YearMonth.of(LocalDate.now().getYear(), 7).lengthOfMonth();
-        	//対象月の開始日
-        	String targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,1);
-            //対象月の終了日
-        	String targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,targetMonthLastDay);
+        	if(targetMonth==1) {
+        		//年を切り替えるかを判断
+        		if(uinfo.getPreDispMonth().contentEquals("12")&&targetMonth==1)
+        		{
+                	//対象月の末尾
+                	targetMonthLastDay = YearMonth.of(LocalDate.now().getYear()+1, targetMonth).lengthOfMonth();
+                	//対象月の開始日
+                	targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,1);
+                    //対象月の終了日
+                	targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,targetMonthLastDay);
+        		}
+        		else
+        		{
+                	//対象月の末尾
+                	targetMonthLastDay = YearMonth.of(LocalDate.now().getYear(), targetMonth).lengthOfMonth();
+                	//対象月の開始日
+                	targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,1);
+                    //対象月の終了日
+                	targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,targetMonthLastDay);
+        		}
+        	}
+        	else if(targetMonth==12)
+        	{
+        		//年を切り替えるかを判断
+        		if(uinfo.getPreDispMonth().contentEquals("1")&&targetMonth==12)
+        		{
+                	//対象月の末尾
+                	targetMonthLastDay = YearMonth.of(LocalDate.now().getYear()-1, targetMonth).lengthOfMonth();
+                	//対象月の開始日
+                	targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,1);
+                    //対象月の終了日
+                	targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,targetMonthLastDay);
+        		}
+        		else
+        		{
+                	//対象月の末尾
+                	targetMonthLastDay = YearMonth.of(LocalDate.now().getYear(), targetMonth).lengthOfMonth();
+                	//対象月の開始日
+                	targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,1);
+                    //対象月の終了日
+                	targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,targetMonthLastDay);
+        		}
+    	    }
+        	else
+        	{
+            	//対象月の末尾
+            	targetMonthLastDay = YearMonth.of(LocalDate.now().getYear(), targetMonth).lengthOfMonth();
+            	//対象月の開始日
+            	targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,1);
+                //対象月の終了日
+            	targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,targetMonthLastDay);
+        	}
 
             BuyListDAO dao = new BuyListDAO();
             //月別合計金額
             totalsum = dao.getTotalSum(userid,targetStart,targetEnd);
             uinfo.setDispMonth(String.valueOf(targetMonth));
+            uinfo.setPreDispMonth(String.valueOf(targetMonth));
+            System.out.println("SavingMoneyListAction dispMonth=" + uinfo.getDispMonth() + " preDispMonth="+uinfo.getPreDispMonth());
             uinfo.setDispMonthSum(totalsum);
 //            req.getSession(true).setAttribute("targetMonth", String.valueOf(targetMonth));
 //            req.getSession(true).setAttribute("totalsum", String.valueOf(totalsum));

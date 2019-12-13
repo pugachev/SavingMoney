@@ -1,6 +1,8 @@
 
 package action;
 
+import java.time.LocalDate;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -28,6 +30,12 @@ public class UserLoginAction extends DispatchAction {
 		uinfo.setLoginStatus("NG");
 		//2-2.セッションに詳細画面の現在のページ数をセット(初期値は1)
 		uinfo.setPresetPageNum(1);
+		//2-3.スタート時の西暦をセット
+		uinfo.setDispYear(String.valueOf(LocalDate.now().getYear()));
+		//2-4.スタート時の月をセット
+		uinfo.setPreDispMonth(String.valueOf(LocalDate.now().getMonthValue()));
+
+		System.out.println(uinfo.getDispYear() + ' ' + uinfo.getPreDispMonth());
 
 		//3.パラメータの取得
     	String rcvmail = (String)req.getParameter("regiEmail");

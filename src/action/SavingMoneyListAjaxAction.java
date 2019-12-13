@@ -17,43 +17,124 @@ import org.apache.struts.action.ActionMapping;
 
 import dao.BuyListDAO;
 import model.DailySum;
+import model.UserInfo;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 
 public class SavingMoneyListAjaxAction extends Action {
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest req,HttpServletResponse res) throws Exception {
+    	//uinfoをセッションから取得する
+    	UserInfo uinfo = (UserInfo)req.getSession(true).getAttribute("uinfo");
+    	if(uinfo==null || (uinfo!=null && uinfo.getUserId().equals(""))) {
+    		return mapping.findForward("failure");
+    	}
     	String userid = (String)req.getSession(true).getAttribute("rcvmail");
     	int targetMonth=0;
+    	int targetMonthLastDay=0;
+    	String targetStart="";
+    	String targetEnd="";
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+    	String rcvMonth = (String)uinfo.getDispMonth();
+    	int totalsum=0;
+    	if(rcvMonth==null || (rcvMonth!=null && rcvMonth.equals(""))) {
+    		rcvMonth = (String)req.getParameter("targetmonth");
+    	}
+
     	if(req.getParameter("targetmonth")!=null)
     	{
         	//画面からポストしてくる対象月
         	targetMonth =  Integer.parseInt(req.getParameter("targetmonth"));
-
+        	if(targetMonth>12) {
+        		targetMonth=1;
+        	}
+        	if(targetMonth==1) {
+        		//年を切り替えるかを判断
+        		if(uinfo.getPreDispMonth().contentEquals("12")&&targetMonth==1)
+        		{
+                	//対象月の末尾
+                	targetMonthLastDay = YearMonth.of(Integer.parseInt(uinfo.getDispYear())+1, targetMonth).lengthOfMonth();
+                	//対象月の開始日
+                	targetStart = String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear())+1,targetMonth,1);
+                    //対象月の終了日
+                	targetEnd= String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear())+1,targetMonth,targetMonthLastDay);
+                	//対象年を格納
+//                	uinfo.setDispYear(uinfo.getDispYear()+1);
+                	uinfo.setDispYear(String.valueOf(Integer.parseInt(uinfo.getDispYear())+1));
+                	//対象月を格納
+                	uinfo.setDispMonth(String.valueOf(targetMonth));
+        		}
+        		else
+        		{
+                	//対象月の末尾
+                	targetMonthLastDay = YearMonth.of(Integer.parseInt(uinfo.getDispYear()), targetMonth).lengthOfMonth();
+                	//対象月の開始日
+                	targetStart = String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear()),targetMonth,1);
+                    //対象月の終了日
+                	targetEnd= String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear()),targetMonth,targetMonthLastDay);
+                	//対象年を格納
+                	//uinfo.setDispYear(String.valueOf(LocalDate.now().getYear()));
+        		}
+        	}
+        	else if(targetMonth==12)
+        	{
+        		//年を切り替えるかを判断
+        		if(uinfo.getPreDispMonth().contentEquals("1")&&targetMonth==12)
+        		{
+                	//対象月の末尾
+                	targetMonthLastDay = YearMonth.of(Integer.parseInt(uinfo.getDispYear())-1, targetMonth).lengthOfMonth();
+                	//対象月の開始日
+                	targetStart = String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear())-1,targetMonth,1);
+                    //対象月の終了日
+                	targetEnd= String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear())-1,targetMonth,targetMonthLastDay);
+                	//対象年を格納
+                	uinfo.setDispYear(String.valueOf(Integer.parseInt(uinfo.getDispYear())-1));
+                	//対象月を格納
+                	uinfo.setDispMonth(String.valueOf(targetMonth));
+        		}
+        		else
+        		{
+                	//対象月の末尾
+                	targetMonthLastDay = YearMonth.of(Integer.parseInt(uinfo.getDispYear()), targetMonth).lengthOfMonth();
+                	//対象月の開始日
+                	targetStart = String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear()),targetMonth,1);
+                    //対象月の終了日
+                	targetEnd= String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear()),targetMonth,targetMonthLastDay);
+                	//対象年を格納
+                	//uinfo.setDispYear(String.valueOf(LocalDate.now().getYear()));
+        		}
+    	    }
+        	else
+        	{
+            	//対象月の末尾
+            	targetMonthLastDay = YearMonth.of(LocalDate.now().getYear(), targetMonth).lengthOfMonth();
+            	//対象月の開始日
+            	targetStart = String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear()),targetMonth,1);
+                //対象月の終了日
+            	targetEnd= String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear()),targetMonth,targetMonthLastDay);
+            	//対象年を格納
+            	//uinfo.setDispYear(String.valueOf(LocalDate.now().getYear()));
+        	}
     	}
-    	else
-    	{
-        	//システムから取得した対象月
-        	targetMonth =  LocalDate.now().getMonthValue();
-    	}
+//    	else
+//    	{
+//        	//システムから取得した対象月
+//        	targetMonth =  LocalDate.now().getMonthValue();
+//    	}
     	req.getSession(true).setAttribute("month", targetMonth);
-
-
-    	//対象月の末尾
-    	int targetMonthLastDay = YearMonth.of(LocalDate.now().getYear(), 7).lengthOfMonth();
-    	//対象月の開始日
-    	String targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,1);
-        //対象月の終了日
-    	String targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,targetMonthLastDay);
+    	uinfo.setDispMonth(String.valueOf(targetMonth));
+    	uinfo.setPreDispMonth(String.valueOf(targetMonth));
 
 
         BuyListDAO dao = new BuyListDAO();
         List<DailySum> rcv = dao.getDailySumList(userid,targetStart,targetEnd);
 
     	JSONObject obj = new JSONObject();
-    	obj.put("year", LocalDate.now().getYear());
+//    	obj.put("year", LocalDate.now().getYear());
+    	obj.put("year", uinfo.getDispYear());
     	obj.put("month", targetMonth);
+    	System.out.println("AjaxList year="+uinfo.getDispYear()+" month="+targetMonth);
     	JSONArray jsonArray = new JSONArray();
         for(int i=0;i<rcv.size();i++)
         {
@@ -67,6 +148,7 @@ public class SavingMoneyListAjaxAction extends Action {
         	//idをセット
         	obj2.put("id",rcv.get(i).getId());
         	jsonArray.add(obj2);
+        	System.out.println("AjaxList day="+String.valueOf(numday)+" price="+rcv.get(i).getDailysum());
         }
 
         obj.put("event", jsonArray);

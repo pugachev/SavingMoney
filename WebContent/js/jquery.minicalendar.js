@@ -25,15 +25,22 @@ $(document).ready(function(){
 	    this.holiday = "";
 
 	    //表示する年月
-	    this.year = this.year || new Date().getFullYear();
+//	    this.year = this.year || new Date().getFullYear();
 //	    this.month = this.month || new Date().getMonth()+1;
+	    this.year = tyear;
 
 	    this.month = tmonth;
 	    targetmonth=tmonth;
 	    // jsonファイルから読み込む
 	    this.loadData(this.month);
 	    this.createFrame();
-	    this.printType(this.year, this.month);
+	    //if(targetmonth==1){
+	    //	this.printType(this.year+1, this.month);
+	    //}else{
+	    	this.printType(this.year, this.month);
+	    //}
+	    console.log('year='+this.year + ' month=' + this.month)
+
 	    // 取得したイベントを表示
 	    this.setEvent();
 
@@ -73,8 +80,16 @@ $(document).ready(function(){
 	     */
 	    printType : function(thisYear, thisMonth) {
 	      $(this.ele).find('.calendar-year-month').text(thisYear + '年' + thisMonth+ '月');
-	      $('.calendar-year-month').prepend('<a href="/savingmoney/SavingMoneyList.do?targetmonth='+(thisMonth-1)+'" class="arrow_left" > ◀ </a>');
-	      $('.calendar-year-month').append('<a href="/savingmoney/SavingMoneyList.do?targetmonth='+(thisMonth+1)+'" class="arrow_left" > ▶ </a>');
+	      if(thisMonth==1)
+	      {
+		      $('.calendar-year-month').prepend('<a href="/savingmoney/SavingMoneyList.do?targetyear='+thisYear+'&targetmonth='+(12)+'" class="arrow_left" > ◀ </a>');
+	      }
+	      else
+	      {
+		      $('.calendar-year-month').prepend('<a href="/savingmoney/SavingMoneyList.do?targetyear='+thisYear+'&targetmonth='+(thisMonth-1)+'" class="arrow_left" > ◀ </a>');
+	      }
+
+	      $('.calendar-year-month').append('<a href="/savingmoney/SavingMoneyList.do?targetyear='+thisYear+'&targetmonth='+(thisMonth+1)+'" class="arrow_left" > ▶ </a>');
 //	      $('.calendar-year-month').prepend('<a href="#" class="arrow_left" onclick="changePreMonth();"> ◀ </a>');
 //	      $('.calendar-year-month').append('<a href="#" class="arrow_left" onclick="changeMextMonth();"> ▶ </a>');
 
@@ -178,7 +193,8 @@ $(document).ready(function(){
 	        success: function(data){
 	          rcvEvents=data.event;
 	          self.events = data.event;
-	          self.year = data.year;
+//	          self.year = data.year;
+	          console.log('data.year='+data.year);
 	          self.month = data.month;
 	          self.date = new Date(data.date);
 	          self.holiday = data.holiday;

@@ -16,6 +16,7 @@
 	NumberFormat nfCur = NumberFormat.getCurrencyInstance();
 	int totalsum = rcvUinfo.getDispMonthSum();
 	String rcvTargetMonth = rcvUinfo.getDispMonth();
+	String rcvTargetYear = rcvUinfo.getDispYear();
 	int offset = rcvUinfo.getPresetPageNum();
 	boolean isLogIn=false;
 	boolean isLogOut=false;
@@ -145,14 +146,15 @@
 			        $fm.remove();
 			  }
 			$(window).on('load',function(){
-				console.log('tmonth=' + tmonth);
+				tyear = <%= rcvTargetYear %>;
 			    tmonth = <%= rcvTargetMonth %>;
+			    console.log('tyear='+tyear+' tmonth=' + tmonth);
 			    rcvid = <%= rcvID %>;
 			    offset = 1;
 				$(document).on("click", ".targettable tr", function(){
 					var td = $(this)[0];
 					var tr = $(this).closest('tr')[0];
-					console.log($(this).children().eq(0).text()+'  '+$(this).children().eq(1).text()+'  '+$(this).children().eq(2).text());
+/* 					console.log($(this).children().eq(0).text()+'  '+$(this).children().eq(1).text()+'  '+$(this).children().eq(2).text()); */
 					var sitems = $('#selecteditem').children();
 					for(var i=0;i<sitems.length;i++){
 						if(sitems.eq(i).text()==$(this).children().eq(1).text()){
@@ -179,7 +181,7 @@
 				$('#targetTable td').on('click',function(){
 					var td = $(this)[0];
 					var tr = $(this).closest('tr')[0];
-					console.log('$(this).text()='+$(this).text());
+					/* console.log('$(this).text()='+$(this).text()); */
 					var tmparray = $(this).text().split(' ');
 					console.log('tmparray='+tmparray);
 					$('#targetdate').val(tmparray[0]);
@@ -302,7 +304,7 @@
 		$(window).load(function() {
 		    for(var j=1;j<=31;j++){
 		    	var tmpday = '#calender-id'+j+' .calender-label';
-		    	console.log('★ tmpday='+tmpday);
+		    	/* console.log('★ tmpday='+tmpday); */
 		    	if($(tmpday)[0]!=null && $(tmpday)[0].textContent!=''){
 		    		var tmpCalenderArray = $(tmpday)[0].textContent.split(' ');
 		    		if(parseInt(tmpCalenderArray[2])>3000){

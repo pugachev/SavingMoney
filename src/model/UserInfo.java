@@ -5,8 +5,24 @@ public class UserInfo {
 	private String loginStatus;
 	//ユーザーID(登録済メールアドレス)
 	private String userId;
+	//表示対象の年
+	private String dispYear;
+	public String getDispYear() {
+		return dispYear;
+	}
+	public void setDispYear(String dispYear) {
+		this.dispYear = dispYear;
+	}
 	//表示対象の月
 	private String dispMonth;
+	//表示対象の前月
+	private String preDispMonth;
+	public String getPreDispMonth() {
+		return preDispMonth;
+	}
+	public void setPreDispMonth(String preDispMonth) {
+		this.preDispMonth = preDispMonth;
+	}
 	//表示対象の月の合計
 	private int	   dispMonthSum;
 	//表示対象の月の買い物リストデータ

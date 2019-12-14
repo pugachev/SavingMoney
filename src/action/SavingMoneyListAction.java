@@ -30,6 +30,7 @@ public class SavingMoneyListAction extends Action {
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     	String rcvYear = (String)req.getParameter("targetyear");
     	String rcvMonth = (String)uinfo.getDispMonth();
+    	int totalyearsum=0;
     	int totalsum=0;
     	if(rcvMonth==null || (rcvMonth!=null && rcvMonth.equals(""))) {
     		rcvMonth = (String)req.getParameter("targetmonth");
@@ -51,11 +52,11 @@ public class SavingMoneyListAction extends Action {
         		if(uinfo.getPreDispMonth().contentEquals("12")&&targetMonth==1)
         		{
                 	//対象月の末尾
-                	targetMonthLastDay = YearMonth.of(LocalDate.now().getYear()+1, targetMonth).lengthOfMonth();
+                	targetMonthLastDay = YearMonth.of(Integer.parseInt(uinfo.getDispYear())+1, targetMonth).lengthOfMonth();
                 	//対象月の開始日
-                	targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,1);
+                	targetStart = String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear())+1,targetMonth,1);
                     //対象月の終了日
-                	targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,targetMonthLastDay);
+                	targetEnd= String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear())+1,targetMonth,targetMonthLastDay);
                 	//対象年を格納
 //                	uinfo.setDispYear(uinfo.getDispYear()+1);
                 	uinfo.setDispYear(String.valueOf(Integer.parseInt(uinfo.getDispYear())+1));
@@ -65,11 +66,11 @@ public class SavingMoneyListAction extends Action {
         		else
         		{
                 	//対象月の末尾
-                	targetMonthLastDay = YearMonth.of(LocalDate.now().getYear(), targetMonth).lengthOfMonth();
+                	targetMonthLastDay = YearMonth.of(Integer.parseInt(uinfo.getDispYear()), targetMonth).lengthOfMonth();
                 	//対象月の開始日
-                	targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,1);
+                	targetStart = String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear()),targetMonth,1);
                     //対象月の終了日
-                	targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,targetMonthLastDay);
+                	targetEnd= String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear()),targetMonth,targetMonthLastDay);
                 	//対象年を格納
                 	//uinfo.setDispYear(String.valueOf(LocalDate.now().getYear()));
         		}
@@ -80,11 +81,11 @@ public class SavingMoneyListAction extends Action {
         		if(uinfo.getPreDispMonth().contentEquals("1")&&targetMonth==12)
         		{
                 	//対象月の末尾
-                	targetMonthLastDay = YearMonth.of(LocalDate.now().getYear()-1, targetMonth).lengthOfMonth();
+                	targetMonthLastDay = YearMonth.of(Integer.parseInt(uinfo.getDispYear())-1, targetMonth).lengthOfMonth();
                 	//対象月の開始日
-                	targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,1);
+                	targetStart = String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear())-1,targetMonth,1);
                     //対象月の終了日
-                	targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,targetMonthLastDay);
+                	targetEnd= String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear())-1,targetMonth,targetMonthLastDay);
                 	//対象年を格納
                 	uinfo.setDispYear(String.valueOf(Integer.parseInt(uinfo.getDispYear())-1));
                 	//対象月を格納
@@ -93,11 +94,11 @@ public class SavingMoneyListAction extends Action {
         		else
         		{
                 	//対象月の末尾
-                	targetMonthLastDay = YearMonth.of(LocalDate.now().getYear(), targetMonth).lengthOfMonth();
+                	targetMonthLastDay = YearMonth.of(Integer.parseInt(uinfo.getDispYear()), targetMonth).lengthOfMonth();
                 	//対象月の開始日
-                	targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,1);
+                	targetStart = String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear()),targetMonth,1);
                     //対象月の終了日
-                	targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,targetMonthLastDay);
+                	targetEnd= String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear()),targetMonth,targetMonthLastDay);
                 	//対象年を格納
                 	//uinfo.setDispYear(String.valueOf(LocalDate.now().getYear()));
         		}
@@ -105,24 +106,26 @@ public class SavingMoneyListAction extends Action {
         	else
         	{
             	//対象月の末尾
-            	targetMonthLastDay = YearMonth.of(LocalDate.now().getYear(), targetMonth).lengthOfMonth();
+            	targetMonthLastDay = YearMonth.of(Integer.parseInt(uinfo.getDispYear()), targetMonth).lengthOfMonth();
             	//対象月の開始日
-            	targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,1);
+            	targetStart = String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear()),targetMonth,1);
                 //対象月の終了日
-            	targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,targetMonthLastDay);
+            	targetEnd= String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear()),targetMonth,targetMonthLastDay);
             	//対象年を格納
             	//uinfo.setDispYear(String.valueOf(LocalDate.now().getYear()));
         	}
 
             BuyListDAO dao = new BuyListDAO();
+            //年別合計金額
+            String yeartotaldate = String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear()),1,1);
+            String yeartotaldate2 = String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear()),12,31);
+            totalyearsum = dao.getTotalYearSum(userid, yeartotaldate, yeartotaldate2);
             //月別合計金額
             totalsum = dao.getTotalSum(userid,targetStart,targetEnd);
             uinfo.setDispMonth(String.valueOf(targetMonth));
             uinfo.setPreDispMonth(String.valueOf(targetMonth));
+            uinfo.setDispYearSum(totalyearsum);
             uinfo.setDispMonthSum(totalsum);
-//            req.getSession(true).setAttribute("targetMonth", String.valueOf(targetMonth));
-//            req.getSession(true).setAttribute("totalsum", String.valueOf(totalsum));
-
     	}
 
     	else
@@ -147,20 +150,20 @@ public class SavingMoneyListAction extends Action {
         		if(uinfo.getPreDispMonth().contentEquals("12")&&targetMonth==1)
         		{
                 	//対象月の末尾
-                	targetMonthLastDay = YearMonth.of(LocalDate.now().getYear()+1, targetMonth).lengthOfMonth();
+                	targetMonthLastDay = YearMonth.of(Integer.parseInt(uinfo.getDispYear())+1, targetMonth).lengthOfMonth();
                 	//対象月の開始日
-                	targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,1);
+                	targetStart = String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear())+1,targetMonth,1);
                     //対象月の終了日
-                	targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,targetMonthLastDay);
+                	targetEnd= String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear())+1,targetMonth,targetMonthLastDay);
         		}
         		else
         		{
                 	//対象月の末尾
-                	targetMonthLastDay = YearMonth.of(LocalDate.now().getYear(), targetMonth).lengthOfMonth();
+                	targetMonthLastDay = YearMonth.of(Integer.parseInt(uinfo.getDispYear()), targetMonth).lengthOfMonth();
                 	//対象月の開始日
-                	targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,1);
+                	targetStart = String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear()),targetMonth,1);
                     //対象月の終了日
-                	targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,targetMonthLastDay);
+                	targetEnd= String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear()),targetMonth,targetMonthLastDay);
         		}
         	}
         	else if(targetMonth==12)
@@ -169,41 +172,43 @@ public class SavingMoneyListAction extends Action {
         		if(uinfo.getPreDispMonth().contentEquals("1")&&targetMonth==12)
         		{
                 	//対象月の末尾
-                	targetMonthLastDay = YearMonth.of(LocalDate.now().getYear()-1, targetMonth).lengthOfMonth();
+                	targetMonthLastDay = YearMonth.of(Integer.parseInt(uinfo.getDispYear())-1, targetMonth).lengthOfMonth();
                 	//対象月の開始日
-                	targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,1);
+                	targetStart = String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear())-1,targetMonth,1);
                     //対象月の終了日
-                	targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,targetMonthLastDay);
+                	targetEnd= String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear())-1,targetMonth,targetMonthLastDay);
         		}
         		else
         		{
                 	//対象月の末尾
-                	targetMonthLastDay = YearMonth.of(LocalDate.now().getYear(), targetMonth).lengthOfMonth();
+                	targetMonthLastDay = YearMonth.of(Integer.parseInt(uinfo.getDispYear()), targetMonth).lengthOfMonth();
                 	//対象月の開始日
-                	targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,1);
+                	targetStart = String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear()),targetMonth,1);
                     //対象月の終了日
-                	targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear()+1,targetMonth,targetMonthLastDay);
+                	targetEnd= String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear()),targetMonth,targetMonthLastDay);
         		}
     	    }
         	else
         	{
             	//対象月の末尾
-            	targetMonthLastDay = YearMonth.of(LocalDate.now().getYear(), targetMonth).lengthOfMonth();
+            	targetMonthLastDay = YearMonth.of(Integer.parseInt(uinfo.getDispYear()), targetMonth).lengthOfMonth();
             	//対象月の開始日
-            	targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,1);
+            	targetStart = String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear()),targetMonth,1);
                 //対象月の終了日
-            	targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,targetMonthLastDay);
+            	targetEnd= String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear()),targetMonth,targetMonthLastDay);
         	}
 
             BuyListDAO dao = new BuyListDAO();
+            //年別合計金額
+            String yeartotaldate = String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear()),1,31);
+            String yeartotaldate2 = String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear()),12,31);
+            totalyearsum = dao.getTotalSum(userid, yeartotaldate, yeartotaldate2);
             //月別合計金額
             totalsum = dao.getTotalSum(userid,targetStart,targetEnd);
             uinfo.setDispMonth(String.valueOf(targetMonth));
             uinfo.setPreDispMonth(String.valueOf(targetMonth));
-            System.out.println("SavingMoneyListAction dispMonth=" + uinfo.getDispMonth() + " preDispMonth="+uinfo.getPreDispMonth());
+            uinfo.setDispYearSum(totalyearsum);
             uinfo.setDispMonthSum(totalsum);
-//            req.getSession(true).setAttribute("targetMonth", String.valueOf(targetMonth));
-//            req.getSession(true).setAttribute("totalsum", String.valueOf(totalsum));
     	}
 
     	req.getSession(true).setAttribute("uinfo", uinfo);

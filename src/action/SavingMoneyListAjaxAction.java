@@ -3,7 +3,6 @@ package action;
 
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 
@@ -37,7 +36,6 @@ public class SavingMoneyListAjaxAction extends Action {
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     	String rcvMonth = (String)uinfo.getDispMonth();
-    	int totalsum=0;
     	if(rcvMonth==null || (rcvMonth!=null && rcvMonth.equals(""))) {
     		rcvMonth = (String)req.getParameter("targetmonth");
     	}
@@ -108,7 +106,7 @@ public class SavingMoneyListAjaxAction extends Action {
         	else
         	{
             	//対象月の末尾
-            	targetMonthLastDay = YearMonth.of(LocalDate.now().getYear(), targetMonth).lengthOfMonth();
+            	targetMonthLastDay = YearMonth.of(Integer.parseInt(uinfo.getDispYear()), targetMonth).lengthOfMonth();
             	//対象月の開始日
             	targetStart = String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear()),targetMonth,1);
                 //対象月の終了日
@@ -134,7 +132,6 @@ public class SavingMoneyListAjaxAction extends Action {
 //    	obj.put("year", LocalDate.now().getYear());
     	obj.put("year", uinfo.getDispYear());
     	obj.put("month", targetMonth);
-    	System.out.println("AjaxList year="+uinfo.getDispYear()+" month="+targetMonth);
     	JSONArray jsonArray = new JSONArray();
         for(int i=0;i<rcv.size();i++)
         {
@@ -148,7 +145,6 @@ public class SavingMoneyListAjaxAction extends Action {
         	//idをセット
         	obj2.put("id",rcv.get(i).getId());
         	jsonArray.add(obj2);
-        	System.out.println("AjaxList day="+String.valueOf(numday)+" price="+rcv.get(i).getDailysum());
         }
 
         obj.put("event", jsonArray);

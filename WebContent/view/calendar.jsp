@@ -14,6 +14,7 @@
 	UserInfo rcvUinfo = (UserInfo)session.getAttribute("uinfo");
 	String rcvID = "'"+rcvUinfo.getUserId()+"'";
 	NumberFormat nfCur = NumberFormat.getCurrencyInstance();
+	int totalyearsum = rcvUinfo.getDispYearSum();
 	int totalsum = rcvUinfo.getDispMonthSum();
 	String rcvTargetMonth = rcvUinfo.getDispMonth();
 	String rcvTargetYear = rcvUinfo.getDispYear();
@@ -89,6 +90,11 @@
 			        }));
 			        $fm.append($('<input />', {
 			            type: 'hidden',
+			            name: 'dtargeyear',
+			            value: tyear
+			        }));
+			        $fm.append($('<input />', {
+			            type: 'hidden',
 			            name: 'dtargemonth',
 			            value: tmonth
 			        }));
@@ -148,7 +154,6 @@
 			$(window).on('load',function(){
 				tyear = <%= rcvTargetYear %>;
 			    tmonth = <%= rcvTargetMonth %>;
-			    console.log('tyear='+tyear+' tmonth=' + tmonth);
 			    rcvid = <%= rcvID %>;
 			    offset = 1;
 				$(document).on("click", ".targettable tr", function(){
@@ -291,7 +296,10 @@
 		    </ul>
 		  </div>
 		  <span class="navbar-text">
-	          合計金額:<% out.print(nfCur.format(totalsum)); %>
+	          年合計:<% out.print(nfCur.format(totalyearsum)); %>&nbsp;月合計:<% out.print(nfCur.format(totalsum)); %>
+		  </span>
+		  <span class="navbar-text">
+
 		  </span>
 		</nav>
 	    <div class="container-fluid">

@@ -30,7 +30,9 @@ public class SavingMoneyDetailAction extends Action {
     	}
     	String userid = (String)uinfo.getUserId();
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    	String rcvYear = (String)uinfo.getDispYear();
     	String rcvMonth = (String)uinfo.getDispMonth();
+    	System.out.println("Detail rcvYear=" + rcvYear + " rcvMonth="+rcvMonth);
     	int rcvOffset = uinfo.getPresetPageNum();
     	if(req.getParameter("doffset")!=null && Integer.parseInt(req.getParameter("doffset"))>0) {
     		rcvOffset = Integer.parseInt(req.getParameter("doffset"));
@@ -44,6 +46,8 @@ public class SavingMoneyDetailAction extends Action {
     	//データ取得処理
     	if(req.getParameter("targetmonth")!=null)
     	{
+    		//画面からポストしてくる対象年
+    		int targetYear = Integer.parseInt(req.getParameter("dtargeyear"));
         	//画面からポストしてくる対象月
         	int targetMonth =  Integer.parseInt(req.getParameter("targetmonth"));
         	//対象月の末尾
@@ -101,11 +105,11 @@ public class SavingMoneyDetailAction extends Action {
 
 
     		//対象月の末尾
-        	int targetMonthLastDay = YearMonth.of(LocalDate.now().getYear(), 7).lengthOfMonth();
+        	int targetMonthLastDay = YearMonth.of(Integer.parseInt(rcvYear), 7).lengthOfMonth();
         	//対象月の開始日
-        	String targetStart = String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,1);
+        	String targetStart = String.format("%4d-%02d-%02d",Integer.parseInt(rcvYear),targetMonth,1);
             //対象月の終了日
-        	String targetEnd= String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,targetMonthLastDay);
+        	String targetEnd= String.format("%4d-%02d-%02d",Integer.parseInt(rcvYear),targetMonth,targetMonthLastDay);
 
             BuyListDAO dao = new BuyListDAO();
             totalDataCnt = dao.getTotalDataCnt(userid,targetStart,targetEnd);

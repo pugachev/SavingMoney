@@ -23,6 +23,14 @@ public class UserInfo {
 	public void setPreDispMonth(String preDispMonth) {
 		this.preDispMonth = preDispMonth;
 	}
+	//表示対象の年の合計
+	private int    dispYearSum;
+	public int getDispYearSum() {
+		return dispYearSum;
+	}
+	public void setDispYearSum(int dispYearSum) {
+		this.dispYearSum = dispYearSum;
+	}
 	//表示対象の月の合計
 	private int	   dispMonthSum;
 	//表示対象の月の買い物リストデータ

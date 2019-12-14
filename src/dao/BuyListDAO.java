@@ -84,6 +84,47 @@ public class BuyListDAO {
         }
     }
 
+    //月別の合計金額を調べる
+    //ログインユーザーの指定期間でのデータ数を調べる
+    public int getTotalYearSum(String userid,String date,String date2) throws SQLException
+    {
+        Connection con = null;
+        PreparedStatement pStmt = null;
+        ResultSet rs = null;
+
+        int ret=0;
+
+        try {
+
+            con = source.getConnection();
+
+            pStmt = con.prepareStatement(TOTALSUM_MONTH);
+            pStmt.setString(1,userid);
+            pStmt.setString(2,date);
+            pStmt.setString(3,date2);
+            rs = pStmt.executeQuery();
+
+            while (rs.next()) {
+            	if(rs.getString("totalprice")!=null) {
+            		ret=Integer.parseInt(rs.getString("totalprice"));
+            	}else {
+            		ret=0;
+            	}
+
+            }
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            if(rs != null){
+                rs.close();
+            }
+            pStmt.close();
+            con.close();
+        }
+
+        return ret;
+    }
+
 
     //月別の合計金額を調べる
     //ログインユーザーの指定期間でのデータ数を調べる

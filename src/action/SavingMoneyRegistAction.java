@@ -2,7 +2,6 @@
 package action;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,11 +13,16 @@ import org.apache.struts.actions.DispatchAction;
 
 import dao.BuyListDAO;
 import model.Product;
+import model.UserInfo;
 
 
 public class SavingMoneyRegistAction extends DispatchAction {
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest req,HttpServletResponse res) throws Exception {
-
+    	//セッションからUserInfoを取得する
+    	UserInfo uinfo = (UserInfo)req.getSession(true).getAttribute("uinfo");
+    	if(uinfo==null || (uinfo!=null && uinfo.getUserId().equals(""))) {
+    		return mapping.findForward("failure");
+    	}
     	String userid = (String)req.getSession(true).getAttribute("rcvmail");
 
     	String rcvMonth = (String)req.getParameter("thisMonth");
@@ -38,7 +42,7 @@ public class SavingMoneyRegistAction extends DispatchAction {
     	int targetMonth = Integer.parseInt(rcvMonth);
 
 
-    	String setDate = String.format("%4d-%02d-%02d",LocalDate.now().getYear(),targetMonth,Integer.parseInt(rcvTargetDate));
+    	String setDate = String.format("%4d-%02d-%02d",Integer.parseInt(uinfo.getDispYear()),targetMonth,Integer.parseInt(rcvTargetDate));
 
     	//「変更」or 「削除」の場合
     	if(rcvTargetId!=null && !rcvTargetId.equals(""))

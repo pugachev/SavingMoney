@@ -55,11 +55,12 @@ Product[] itemList=null;
 <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <!--<head>内-->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.0/css/theme.default.min.css">
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.0/js/jquery.tablesorter.min.js"></script>
 <!-- 追加機能(widgets)を使用する場合は次も追加する -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.0/js/jquery.tablesorter.widgets.min.js"></script>
@@ -68,68 +69,46 @@ var userid='';
 var targetmonth='';
 var offset='';
 var tmp='';
-$(document).ready(function()
-	    {
-			userid=<%= rcvID %>;
-			targetmonth=<%= rcvTargetMonth %>;
-			console.log('userid=' + userid + ' targetmonth='+targetmonth);
-	        $("#myTable").tablesorter();
-	        tmp='.page'+<%= presentPageNum %>;
-	    	$(tmp).addClass("active");
-	    }
-	);
-function calender_func(offset){
+function delete_func(){
+
     var $fm = $('<form />', {
         method: 'POST',
-        action: '${pageContext.request.contextPath}/SavingMoneyList.do'
+        action: '${pageContext.request.contextPath}/SavingMoneyDelete.do'
     });
     $fm.append($('<input />', {
         type: 'hidden',
         name: 'dtargetid',
-        value: userid
+        value: $('#targetid').val()
     }));
-    $fm.append($('<input />', {
-        type: 'hidden',
-        name: 'dtargemonth',
-        value: offset
-    }));
+
     $fm.appendTo(document.body);
     $fm.submit();
     $fm.remove();
 }
-function pageNation(os){
-
-	//if(os!=1){
-	//	tmp = '.page'+(os-1);
-	//}
-	//$(tmp).removeClass("active");
-	tmp = '.page'+os;
-
-
-    var $fm = $('<form />', {
-        method: 'POST',
-        action: '${pageContext.request.contextPath}/SavingMoneyDetail.do'
-    });
-    $fm.append($('<input />', {
-        type: 'hidden',
-        name: 'dtargetid',
-        value: userid
-    }));
-    $fm.append($('<input />', {
-        type: 'hidden',
-        name: 'dtargemonth',
-        value: targetmonth
-    }));
-    $fm.append($('<input />', {
-        type: 'hidden',
-        name: 'doffset',
-        value: os
-    }));
-    $fm.appendTo(document.body);
-    $fm.submit();
-    $fm.remove();
-
+function dispDeleteModal(obj){
+	$('#deleteModal').modal();
+	$('#myTable td').on('click',function(){
+		var td = $(this)[0];
+		var tr = $(this).closest('tr')[0];
+		var id=$('#myTable > tbody > tr:nth-child(1) > td:nth-child(1)')[0].textContent;
+		var item=$('#myTable > tbody > tr:nth-child(2) > td:nth-child(2)')[0].textContent;
+		var price=$('#myTable > tbody > tr:nth-child(3) > td:nth-child(3)')[0].textContent;
+		$('#text1')[0].value=item;
+		$('#text2')[0].value=price;
+		$('#targetid')[0].value=id;
+	});
 }
+
+$(document).ready(function(){
+	$("#myTable").tablesorter();
+});
+$(window).on('load',function(){
+
+
+	$("#deleteModal").on("hidden.bs.modal", function(){
+
+	});
+});
 
 </script>
 <style>
@@ -156,6 +135,24 @@ function pageNation(os){
         padding: 5px;
     }
     #myTable th { background-color: #61c5bb; color: #fff;}
+    #editbtn{
+	  display: inline-block;
+	  border-radius: 2px;
+	  background-color: green;
+	  padding: 1px;
+	  text-align: center;
+	  color: white;
+	  width: 60px;
+	}
+    #deletebtn{
+	  display: inline-block;
+	  border-radius: 2px;
+	  background-color: red;
+	  padding: 1px;
+	  text-align: center;
+	  color: white;
+	  width: 60px;
+	}
     @media screen and (max-width: 720px){
         #demo01 table { width: 100%; border:none; padding: 10px;}
         #demo01 thead { display: none;}
@@ -181,6 +178,7 @@ function pageNation(os){
             display: block;
         }
     }
+
 </style>
 </head>
 <body>
@@ -208,6 +206,8 @@ function pageNation(os){
                 <th>項目</th>
                 <th>金額</th>
                 <th>日付</th>
+                <th style="width:60px;">編集</th>
+                <th style="width:60px;">削除</th>
             </tr>
         </thead>
         <tbody>
@@ -218,6 +218,8 @@ function pageNation(os){
 	                <td><%= item.getTitle() %></td>
 	                <td><%= item.getPrice() %></td>
 	                <td><%= item.getDay() %></td>
+	                <td><input type="button" id="editbtn" value="編集"></td>
+	                <td><input type="button" id="deletebtn" value="削除" onclick="dispDeleteModal();"></td>
 	            </tr>
             	<% } %>
         	<% } %>
@@ -240,3 +242,38 @@ function pageNation(os){
 	</div>
 </div>
 </body>
+</html>
+<!-- モーダル部分始まり -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">削除</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<form id="regform" name="myform" action="${pageContext.request.contextPath}/SavingMoneyDelete.do" method="post">
+				<div class="modal-body">
+					<div class="form-group">
+					  	<label for="text1">金額:</label>
+					  	<input type="text" id="text1" name="buyamount" class="form-control" disabled="disabled">
+					</div>
+					<div class="form-group">
+					  	<label for="text2">メモ:</label>
+					  	<input type="text" id="text2" name="buymemo" class="form-control" disabled="disabled">
+					</div>
+					<div class="form-group">
+					    <input type="hidden" id="targetid" name="targetid" value="">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+					<button type="button" class="btn btn-primary" id="delete_btn" onclick="delete_func();">削除</button>
+				</div>
+			</form>
+	  </div>
+	</div>
+</div>
+	<!-- モーダル部分終わり -->
+</div><!-- /container -->

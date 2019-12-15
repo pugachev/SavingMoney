@@ -3,11 +3,18 @@ package model;
 public class Product {
     private int id;
     private int itemnum;
+    private String memo;
     private String userid;
     private String title;
     private String day;
 
-    public String getDay() {
+    public String getMemo() {
+		return memo;
+	}
+	public void setMemo(String memo) {
+		this.memo = memo;
+	}
+	public String getDay() {
 		return day;
 	}
 	public void setDay(String day) {

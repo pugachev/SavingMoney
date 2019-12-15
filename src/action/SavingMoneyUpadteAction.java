@@ -12,10 +12,11 @@ import org.apache.struts.actions.DispatchAction;
 import dao.BuyListDAO;
 
 
-public class SavingMoneyDeleteAction extends DispatchAction {
+public class SavingMoneyUpadteAction extends DispatchAction {
     public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest req,HttpServletResponse res) throws Exception {
 
     	String rcvdTargetId = (String)req.getParameter("dtargetid");
+    	String rcvdTargetMonth = (String)req.getParameter("dtargemonth");
 
     	//「変更」or 「削除」の場合
     	if(rcvdTargetId!=null && !rcvdTargetId.equals(""))
@@ -23,6 +24,7 @@ public class SavingMoneyDeleteAction extends DispatchAction {
 			//DBへdelete(論理削除か物理削除かは未定)
             BuyListDAO dao = new BuyListDAO();
             dao.deleteItem(rcvdTargetId);
+            req.getSession(true).setAttribute("deleteMonth", rcvdTargetMonth);
     	}
         return mapping.findForward("success");
     }

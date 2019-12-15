@@ -33,6 +33,7 @@ public class SavingMoneyRegistAction extends DispatchAction {
     	String rcvTargetDate = req.getParameter("targetdate");
     	int rcvItemNum = Integer.parseInt(req.getParameter("selecteditem"));
     	int rcvPrice = Integer.parseInt(req.getParameter("buyamount"));
+    	String rcvMemo = (String)req.getParameter("buymemo");
 
     	//対象日時作成
     	//フォーマット
@@ -61,6 +62,7 @@ public class SavingMoneyRegistAction extends DispatchAction {
         	Product tmp = new Product();
         	tmp.setItemnum(rcvItemNum);
         	tmp.setPrice(rcvPrice);
+        	tmp.setMemo(rcvMemo);
         	tmp.setUserid(userid);
         	tmp.setBuydate(setDate);
 

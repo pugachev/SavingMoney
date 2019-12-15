@@ -31,7 +31,7 @@
     </action>
 
     <action name="SavingMoneyRegistForm" type="action.SavingMoneyDeleteAction" path="/SavingMoneyDelete">
-      <forward name="success" path="/SavingMoneyList.do"/>
+      <forward name="success" path="/SavingMoneyDetail.do"/>
     </action>
 
     <action name="SavingMoneyRegistForm" type="action.UserLoginAction" path="/UserLogin">

@@ -49,8 +49,8 @@
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 		<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 		<script src="${pageContext.request.contextPath}/js/jquery.minicalendar.js"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 		<style>
 			nav{
 				font-size:1.2em;
@@ -159,18 +159,17 @@
 				$(document).on("click", ".targettable tr", function(){
 					var td = $(this)[0];
 					var tr = $(this).closest('tr')[0];
-/* 					console.log($(this).children().eq(0).text()+'  '+$(this).children().eq(1).text()+'  '+$(this).children().eq(2).text()); */
 					var sitems = $('#selecteditem').children();
 					for(var i=0;i<sitems.length;i++){
 						if(sitems.eq(i).text()==$(this).children().eq(1).text()){
-							console.log(sitems.eq(i).val()+'  ' + sitems.eq(i).text());
 						    // 全ての選択を外す
 						    $("#selecteditem option").attr("selected", false);
 						    //選択項目を変更する
 						    $("#selecteditem").val(sitems.eq(i).val());
-
 						    //金額をセットする
 						    $('[name="buyamount"]').val($(this).children().eq(2).text());
+						    //メモをセットする
+						    /* $('[name="buymemo"]').val($(this).children().eq(2).text()); */
 						    //IDをセットする
 						    $('#targetid').val($(this).children().eq(0).text());
 
@@ -250,9 +249,10 @@
 				    //選択項目を変更する
 				    $("#selecteditem").val(1);
 
-				    //金額をセットする
+				    //金額をクリアする
 				    $('[name="buyamount"]').val('');
-
+				    //メモをクリアする
+				    $('[name="buymemo"]').val('');
 				    //IDをクリアする
 				    $("#targetid").val('');
 				    $("#targetdate").val('');
@@ -356,6 +356,10 @@
 						<div class="form-group">
 						  	<label for="text1">金額:</label>
 						  	<input type="text" id="text1" name="buyamount" class="form-control">
+						</div>
+						<div class="form-group">
+						  	<label for="text2">メモ:</label>
+						  	<input type="text" id="text2" name="buymemo" class="form-control">
 						</div>
 						<div class="form-group">
 						    <input type="hidden" id="targetid" name="targetid" value="">

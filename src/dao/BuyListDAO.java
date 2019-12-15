@@ -23,7 +23,7 @@ public class BuyListDAO {
 //    private static final String SELECTAMOUNTBYMONTH = "select sum(price) as buyamount from buylist where buydate between";
 
     //購入品を追加するSQL
-	private static final String INSERTBUYLIST = "insert into buylist(itemnum,price,userid,buydate,regidate) values(?,?,?,?,?);";
+	private static final String INSERTBUYLIST = "insert into buylist(itemnum,price,userid,buydate,regidate,memo) values(?,?,?,?,?,?);";
 
 	//選択日に使った合計金額を取得するSQL
 	private static final String SELECTAMOUNTBYDAY = "select buydate,sum(price) as buyamount from buylist where userid=? group by ? ;";
@@ -479,6 +479,7 @@ public class BuyListDAO {
             pStmt.setString(3,pro.getUserid());
             pStmt.setString(4,pro.getBuydate());
             pStmt.setDate(5,now);
+            pStmt.setString(6, pro.getMemo());
             pStmt.executeUpdate();
 
         }catch(SQLException ex){

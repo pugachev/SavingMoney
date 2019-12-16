@@ -132,10 +132,15 @@ function dispDeleteModal(){
 	$('#myTable td').on('click',function(){
 		var td = $(this)[0];
 		var tr = $(this).closest('tr')[0];
-		var id=$('#myTable > tbody > tr:nth-child(1) > td:nth-child(1)')[0].textContent;
-		var item=$('#myTable > tbody > tr:nth-child(1) > td:nth-child(2)')[0].textContent;
-		var price=$('#myTable > tbody > tr:nth-child(1) > td:nth-child(3)')[0].textContent;
-		var memo=$('#myTable > tbody > tr:nth-child(1) > td:nth-child(4)')[0].textContent;
+		var index = $(this).closest('tr')[0].rowIndex;
+		var id=$('#myTable > tbody > tr:nth-child('+index+') > td:nth-child(1)')[0].textContent;
+		var item=$('#myTable > tbody > tr:nth-child('+index+') > td:nth-child(2)')[0].textContent;
+		var price=$('#myTable > tbody > tr:nth-child('+index+') > td:nth-child(3)')[0].textContent;
+		var memo=$('#myTable > tbody > tr:nth-child('+index+') > td:nth-child(4)')[0].textContent;
+		$('#deleteselecteditem option').filter(function(index){
+			return $(this).text() === item;
+		}).prop('selected', true);
+		$("#deleteselecteditem").prop("disabled",true);
 		$('#text1')[0].value=price;
 		$('#text2')[0].value=memo;
 		$('#targetid2')[0].value=id;
@@ -147,14 +152,17 @@ function dispUpdateModal(){
 	$('#myTable td').on('click',function(){
 		var td = $(this)[0];
 		var tr = $(this).closest('tr')[0];
-		var id=$('#myTable > tbody > tr:nth-child(1) > td:nth-child(1)')[0].textContent;
-		var item=$('#myTable > tbody > tr:nth-child(1) > td:nth-child(2)')[0].textContent;
-		var price=$('#myTable > tbody > tr:nth-child(1) > td:nth-child(3)')[0].textContent;
-		var memo=$('#myTable > tbody > tr:nth-child(1) > td:nth-child(4)')[0].textContent;
+		var index = $(this).closest('tr')[0].rowIndex;
+		var id=$('#myTable > tbody > tr:nth-child('+index+') > td:nth-child(1)')[0].textContent;
+		var item=$('#myTable > tbody > tr:nth-child('+index+') > td:nth-child(2)')[0].textContent;
+		var price=$('#myTable > tbody > tr:nth-child('+index+') > td:nth-child(3)')[0].textContent;
+		var memo=$('#myTable > tbody > tr:nth-child('+index+') > td:nth-child(4)')[0].textContent;
+	/* 	$('#deleteselecteditem')[0].selectedIndex=id; */
+		$('#updateselecteditem option').filter(function(index){
+			return $(this).text() === item;
+		}).prop('selected', true);
 		$('#text11')[0].value=price;
-		$('#targetprice')[0].value=price;
 		$('#text22')[0].value=memo;
-		$('#targetmemo')[0].value=memo;
 		$('#targetid2')[0].value=id;
 	});
 }
@@ -318,6 +326,20 @@ $(window).on('load',function(){
 			<form id="deleteform" name="myform" action="${pageContext.request.contextPath}/SavingMoneyDelete.do" method="post">
 				<div class="modal-body">
 					<div class="form-group">
+						<label for="select1a">品目:</label>
+						<select id="deleteselecteditem" name="selecteditem" class="form-control">
+						  <option value="1">食費</option>
+						  <option value="2">外食費</option>
+						  <option value="3">交通費</option>
+						  <option value="4">交際費</option>
+						  <option value="5">ガソリン代</option>
+						  <option value="6">税金</option>
+						  <option value="7">日用品</option>
+						  <option value="8">生活費</option>
+						  <option value="9">Amazon</option>
+						</select>
+					</div>
+					<div class="form-group">
 					  	<label for="text1">金額:</label>
 					  	<input type="text" id="text1" name="buyamount" class="form-control" disabled="disabled">
 					</div>
@@ -350,6 +372,20 @@ $(window).on('load',function(){
 			</div>
 			<form id="updateform" name="myform" action="${pageContext.request.contextPath}/SavingMoneyUpdate.do" method="post">
 				<div class="modal-body">
+					<div class="form-group">
+						<label for="select1a">品目:</label>
+						<select id="updateselecteditem" name="selecteditem" class="form-control">
+						  <option value="1">食費</option>
+						  <option value="2">外食費</option>
+						  <option value="3">交通費</option>
+						  <option value="4">交際費</option>
+						  <option value="5">ガソリン代</option>
+						  <option value="6">税金</option>
+						  <option value="7">日用品</option>
+						  <option value="8">生活費</option>
+						  <option value="9">Amazon</option>
+						</select>
+					</div>
 					<div class="form-group">
 					  	<label for="text1">金額:</label>
 					  	<input type="text" id="text11" name="buyamount" class="form-control">

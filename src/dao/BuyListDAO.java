@@ -29,7 +29,7 @@ public class BuyListDAO {
 	private static final String SELECTAMOUNTBYDAY = "select buydate,sum(price) as buyamount from buylist where userid=? group by ? ;";
 
 	//「項目」と「金額」を変更するSQL
-	private static final String UPDATEITEM = "update buylist set itemnum=?,price=? where id=?";
+	private static final String UPDATEITEM = "update buylist set price=?,memo=? where id=?";
 
 	//「項目」を削除するSQL
 	private static final String DELETEITEM = "delete from buylist where id=?";
@@ -44,7 +44,7 @@ public class BuyListDAO {
 	private static final String SUMPRICE = "SELECT sum(price) as sumprice,buydate FROM struts.buylist where userid= ? group by buydate having buydate >= ? and buydate <= ?;";
 
 	//「上限」と「オフセット」ありで買い物明細を取得する
-	private static final String SHOPPINGLIST_LIMIT ="select buylist.id as id,buylist.price as price,buylist.buydate as buydate,buylist.regidate as regidate,itemlist.title as title from buylist left join itemlist on buylist.itemnum = itemlist.itemnum where userid=? and buydate between ?  and ? order by  buydate asc limit 10 offset ?";
+	private static final String SHOPPINGLIST_LIMIT ="select buylist.id as id,buylist.price as price,buylist.buydate as buydate,buylist.regidate as regidate,itemlist.title as title,memo from buylist left join itemlist on buylist.itemnum = itemlist.itemnum where userid=? and buydate between ?  and ? order by  buydate asc limit 10 offset ?";
 
 	private static final String COUNT_DATA ="select count(buylist.id) as totalcnt from buylist  left join itemlist on buylist.itemnum = itemlist.itemnum where userid= ? and buydate  between ? and ?;";
 
@@ -275,7 +275,7 @@ public class BuyListDAO {
         }
     }
 
-    public void updateItem(String id,String inum,String price) throws SQLException
+    public void updateItem(String id,String price,String memo) throws SQLException
     {
         //新しく入力された商品にテーブルを更新する
         Connection con = source.getConnection();
@@ -283,8 +283,8 @@ public class BuyListDAO {
 
         try{
             pStmt = con.prepareStatement(UPDATEITEM);
-            pStmt.setString(1,inum);
-            pStmt.setString(2,price);
+            pStmt.setString(1,price);
+            pStmt.setString(2,memo);
             pStmt.setString(3,id);
             pStmt.executeUpdate();
 
@@ -504,6 +504,7 @@ public class BuyListDAO {
         pro.setPrice(rs.getInt("price"));
         pro.setTitle(rs.getString("title"));
         pro.setBuydate(rs.getString("buydate"));
+        pro.setMemo(rs.getString("memo"));
         return pro;
     }
     private DailySum getDailySum(ResultSet rs) throws SQLException {

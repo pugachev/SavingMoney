@@ -34,6 +34,10 @@
       <forward name="success" path="/SavingMoneyDetail.do"/>
     </action>
 
+    <action name="SavingMoneyRegistForm" type="action.SavingMoneyUpdateAction" path="/SavingMoneyUpdate">
+      <forward name="success" path="/SavingMoneyDetail.do"/>
+    </action>
+
     <action name="SavingMoneyRegistForm" type="action.UserLoginAction" path="/UserLogin">
       <forward name="success" path="/SavingMoneyList.do"/>
       <forward name="failure" path="/index.jsp"/>

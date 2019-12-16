@@ -4,6 +4,13 @@ public class DailySum {
     private int id;
     private int dailysum;
     private String buydate;
+    private String memo;
+	public String getMemo() {
+		return memo;
+	}
+	public void setMemo(String memo) {
+		this.memo = memo;
+	}
 	public int getId() {
 		return id;
 	}

@@ -85,17 +85,77 @@ function delete_func(){
     $fm.submit();
     $fm.remove();
 }
-function dispDeleteModal(obj){
+
+function update_func(){
+
+    var $fm = $('<form />', {
+        method: 'POST',
+        action: '${pageContext.request.contextPath}/SavingMoneyUpdate.do'
+    });
+    $fm.append($('<input />', {
+        type: 'hidden',
+        name: 'dtargetid',
+        value: $('#targetid2').val()
+    }));
+    $fm.append($('<input />', {
+        type: 'hidden',
+        name: 'dtargetprice',
+        value: $('#text11')[0].value
+    }));
+    $fm.append($('<input />', {
+        type: 'hidden',
+        name: 'dtargetmemo',
+        value: $('#text22')[0].value
+    }));
+    $fm.appendTo(document.body);
+    $fm.submit();
+    $fm.remove();
+}
+
+function calender_func(offset){
+    var $fm = $('<form />', {
+        method: 'POST',
+        action: '${pageContext.request.contextPath}/SavingMoneyList.do'
+    });
+    $fm.append($('<input />', {
+        type: 'hidden',
+        name: 'targetonth',
+        value: <%= rcvTargetMonth %>
+    }));
+    $fm.appendTo(document.body);
+    $fm.submit();
+    $fm.remove();
+}
+
+function dispDeleteModal(){
 	$('#deleteModal').modal();
 	$('#myTable td').on('click',function(){
 		var td = $(this)[0];
 		var tr = $(this).closest('tr')[0];
 		var id=$('#myTable > tbody > tr:nth-child(1) > td:nth-child(1)')[0].textContent;
-		var item=$('#myTable > tbody > tr:nth-child(2) > td:nth-child(2)')[0].textContent;
-		var price=$('#myTable > tbody > tr:nth-child(3) > td:nth-child(3)')[0].textContent;
-		$('#text1')[0].value=item;
-		$('#text2')[0].value=price;
-		$('#targetid')[0].value=id;
+		var item=$('#myTable > tbody > tr:nth-child(1) > td:nth-child(2)')[0].textContent;
+		var price=$('#myTable > tbody > tr:nth-child(1) > td:nth-child(3)')[0].textContent;
+		var memo=$('#myTable > tbody > tr:nth-child(1) > td:nth-child(4)')[0].textContent;
+		$('#text1')[0].value=price;
+		$('#text2')[0].value=memo;
+		$('#targetid2')[0].value=id;
+	});
+}
+
+function dispUpdateModal(){
+	$('#updateModal').modal();
+	$('#myTable td').on('click',function(){
+		var td = $(this)[0];
+		var tr = $(this).closest('tr')[0];
+		var id=$('#myTable > tbody > tr:nth-child(1) > td:nth-child(1)')[0].textContent;
+		var item=$('#myTable > tbody > tr:nth-child(1) > td:nth-child(2)')[0].textContent;
+		var price=$('#myTable > tbody > tr:nth-child(1) > td:nth-child(3)')[0].textContent;
+		var memo=$('#myTable > tbody > tr:nth-child(1) > td:nth-child(4)')[0].textContent;
+		$('#text11')[0].value=price;
+		$('#targetprice')[0].value=price;
+		$('#text22')[0].value=memo;
+		$('#targetmemo')[0].value=memo;
+		$('#targetid2')[0].value=id;
 	});
 }
 
@@ -205,6 +265,7 @@ $(window).on('load',function(){
                 <th>ID</th>
                 <th>項目</th>
                 <th>金額</th>
+                <th>メモ</th>
                 <th>日付</th>
                 <th style="width:60px;">編集</th>
                 <th style="width:60px;">削除</th>
@@ -217,8 +278,9 @@ $(window).on('load',function(){
 	                <td><%= item.getId() %></td>
 	                <td><%= item.getTitle() %></td>
 	                <td><%= item.getPrice() %></td>
+	                <td><%= item.getMemo() %></td>
 	                <td><%= item.getDay() %></td>
-	                <td><input type="button" id="editbtn" value="編集"></td>
+	                <td><input type="button" id="editbtn" value="編集" onclick="dispUpdateModal();"></td>
 	                <td><input type="button" id="deletebtn" value="削除" onclick="dispDeleteModal();"></td>
 	            </tr>
             	<% } %>
@@ -253,7 +315,7 @@ $(window).on('load',function(){
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<form id="regform" name="myform" action="${pageContext.request.contextPath}/SavingMoneyDelete.do" method="post">
+			<form id="deleteform" name="myform" action="${pageContext.request.contextPath}/SavingMoneyDelete.do" method="post">
 				<div class="modal-body">
 					<div class="form-group">
 					  	<label for="text1">金額:</label>
@@ -275,5 +337,39 @@ $(window).on('load',function(){
 	  </div>
 	</div>
 </div>
-	<!-- モーダル部分終わり -->
-</div><!-- /container -->
+<!-- モーダル部分終わり -->
+<!-- モーダル部分始まり -->
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">編集</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<form id="updateform" name="myform" action="${pageContext.request.contextPath}/SavingMoneyUpdate.do" method="post">
+				<div class="modal-body">
+					<div class="form-group">
+					  	<label for="text1">金額:</label>
+					  	<input type="text" id="text11" name="buyamount" class="form-control">
+					</div>
+					<div class="form-group">
+					  	<label for="text2">メモ:</label>
+					  	<input type="text" id="text22" name="buymemo" class="form-control">
+					</div>
+					<div class="form-group">
+					    <input type="hidden" id="targetid2" name="targetid2" value="">
+					    <input type="hidden" id="targetprice" name="targetprice" value="">
+					    <input type="hidden" id="targetmemo" name="targetmemo" value="">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+					<button type="button" class="btn btn-primary" id="update_btn" onclick="update_func();">編集</button>
+				</div>
+			</form>
+	  </div>
+	</div>
+</div>
+<!-- モーダル部分終わり -->

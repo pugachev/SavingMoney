@@ -78,6 +78,8 @@ public class SavingMoneyDetailAction extends Action {
             	obj2.put("price",rcv.get(i).getPrice());
             	//idをセット
             	obj2.put("id",rcv.get(i).getId());
+            	//メモをセット
+            	obj2.put("memo", rcv.get(i).getMemo());
             	jsonArray.add(obj2);
             }
 
@@ -132,6 +134,8 @@ public class SavingMoneyDetailAction extends Action {
             	obj2.put("price",rcv.get(i).getPrice());
             	//idをセット
             	obj2.put("id",rcv.get(i).getId());
+            	//メモをセット
+            	obj2.put("memo", rcv.get(i).getMemo());
             	jsonArray.add(obj2);
             }
 
